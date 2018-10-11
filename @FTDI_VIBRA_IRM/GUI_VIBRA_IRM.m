@@ -291,7 +291,7 @@ handles = guidata(hObject); % load gui data
 
 tag = get(hObject,'tag');
 channel = str2double(tag(end));
-haldes.FTDI.Stop(channel);
+handles.FTDI.Stop(channel);
 
 set(handles.(sprintf('pushbutton_OFF_%d',channel)),'BackgroundColor',[1 0 0]              );
 set(handles.(sprintf('pushbutton_ON_%d' ,channel)),'BackgroundColor',handles.buttonBGcolor);
@@ -306,8 +306,8 @@ handles = guidata(hObject); % load gui data
 
 tag = get(hObject,'tag');
 channel = str2double(tag(end));
-haldes.FTDI.Valve(channel) = str2double(get(handles.(sprintf('edit_VALVE_%d',channel)),'String'));
-haldes.FTDI.Start(channel);
+handles.FTDI.Value(channel) = str2double(get(handles.(sprintf('edit_VALVE_%d',channel)),'String'));
+handles.FTDI.Start(channel);
 
 set(handles.(sprintf('pushbutton_ON_%d'  ,channel)),'BackgroundColor',[0 1 0]              );
 set(handles.(sprintf('pushbutton_OFF_%d' ,channel)),'BackgroundColor',handles.buttonBGcolor);

@@ -11,7 +11,7 @@ classdef FTDI_VIBRA_IRM < handle
         FT_STATUS
         IsOpen              = 0
         IsReady             = 0
-        Value               = 55; % [0-100] : percentage(%) of valve opened
+        Value               = [60 60 60 60]; % [0-100] : percentage(%) of valve opened
         
     end % properties
     
@@ -37,5 +37,11 @@ classdef FTDI_VIBRA_IRM < handle
         end % function : ctor
         
     end % methods
+    
+    methods(Static)
+        
+        GUI_VIBRA_IRM
+        
+    end % methods static
     
 end % classdef

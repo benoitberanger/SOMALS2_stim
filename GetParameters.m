@@ -63,6 +63,25 @@ Parameters.Text.ClickCorlor = [0   255 0  ]; % [R G B] ( from 0 to 255 )
 %   SOMALS2   %
 %%%%%%%%%%%%%%%
 
+% Small cross at the center => @FixationCross
+Parameters.Cross.ScreenRatio     = 0.20;          % ratio : dim   = ScreenHeight*ratio_screen
+Parameters.Cross.lineWidthRatio  = 0.05;          % ratio : width = dim         *ratio_width
+Parameters.Cross.Color           = [255 255 255]; % [R G B] ( from 0 to 255 )
+
+% All texts => @Text
+Parameters.Question.Content = 'Sensation de mouvement ?';
+Parameters.Question.Color   = Parameters.Text.Color;
+Parameters.Question.Xpos    = 0.50;
+Parameters.Question.Ypos    = 0.20;
+Parameters.Yes.Content = 'Oui';
+Parameters.Yes.Color   = Parameters.Text.Color;
+Parameters.Yes.Xpos    = 0.75;
+Parameters.Yes.Ypos    = 0.40;
+Parameters.No.Content = 'Non';
+Parameters.No.Color   = Parameters.Text.Color;
+Parameters.No.Xpos    = 0.25;
+Parameters.No.Ypos    = 0.40;
+
 
 %%%%%%%%%%%%%%
 %  Keybinds  %

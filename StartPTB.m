@@ -98,7 +98,7 @@ PTB.White = WhiteIndex( PTB.wPtr );
 Screen('TextSize' , PTB.wPtr, round(S.Parameters.Text.SizeRatio * PTB.wRect(4)));
 Screen('TextFont' , PTB.wPtr, S.Parameters.Text.Font);
 Screen('TextColor', PTB.wPtr, S.Parameters.Text.Color);
-
+Screen('Preference', 'TextRenderer', 1);
 
 %% Priority
 

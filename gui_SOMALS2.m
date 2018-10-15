@@ -833,11 +833,11 @@ else % Create the figure
     
     figPtr = figHandle;
     
-    fprintf('\n')
-    fprintf('Response buttons (fORRP 932) : \n')
+        fprintf('\n')
+    fprintf('Response buttuns (fORRP 932) : \n')
     fprintf('USB \n')
-    fprintf('peu importe \n')
-    fprintf('HID NAR BYGRT \n')
+    fprintf('TETHYX \n')
+    fprintf('HID JOYSTICK \n')
     fprintf('\n')
     
     

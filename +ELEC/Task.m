@@ -20,7 +20,8 @@ try
     %% Prepare objects
     
     [ QUESTION, YES, NO ] = ELEC.Prepare.Text;
-    [ CROSS ] = ELEC.Prepare.Cross;
+    [ CROSS             ] = ELEC.Prepare.Cross;
+    [ CURSOR            ] = ELEC.Prepare.Cursor;
     
     
     %% Eyelink
@@ -42,10 +43,21 @@ try
             
             case 'StartTime' % --------------------------------------------
                 
-                CROSS.Draw
+                % Fetch initialization data
+                switch S.InputMethod
+                    case 'Joystick'
+                        [newX, ~] = ELEC.QueryJoystickData( CURSOR.screenX, CURSOR.screenY );
+                    case 'Mouse'
+                        SetMouse(CURSOR.Xorigin,CURSOR.Yorigin,CURSOR.wPtr);
+                        [newX, ~] = ELEC.QueryMouseData( CURSOR.wPtr, CURSOR.Xorigin, CURSOR.Yorigin );
+                end
                 
-                Screen('DrawingFinished', S.PTB.wPtr);
-                Screen('Flip', S.PTB.wPtr);
+                % Initialize cursor position
+                CURSOR.Move(newX,0);
+                
+                CROSS.Draw
+                Screen('DrawingFinished',S.PTB.wPtr);
+                Screen('Flip',S.PTB.wPtr);
                 
                 StartTime = Common.StartTimeEvent;
                 
@@ -56,7 +68,7 @@ try
                 
             case 'Rest'
                 
-                Text_rest.Draw
+                CROSS.Draw
                 
                 when = StartTime + EP.Data{evt,2} - S.PTB.slack;
                 Screen('DrawingFinished', S.PTB.wPtr);
@@ -90,10 +102,12 @@ try
                 
             case {'Nerve', 'Skin'}
                 
-                Text_mvt. Draw
-                Text_side.Draw
+                QUESTION.Draw
+                YES.     Draw
+                NO.      Draw
                 
-                CROSS.Draw
+                ELEC.UpdateCursor( CURSOR )
+                CURSOR.  Draw
                 
                 when = StartTime + EP.Data{evt,2} - S.PTB.slack;
                 Screen('DrawingFinished', S.PTB.wPtr);
@@ -102,34 +116,18 @@ try
                 
                 ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] EP.Data{evt,4:end}});
                 
-                % Make the metronom
-                
-                nrFramesCondition = ( Parameters.ActivityDuration ) * S.PTB.FPS ;
-                nrFramesCycle     = round(1/Parameters.Metronome/2 * S.PTB.FPS) ;
-                nrCycles          = round(nrFramesCondition/nrFramesCycle);
-                nrCycles = nrCycles + 1; % add one cycle in the program in case of delay due to machine timing imperfections
-                
-                value = 0;
-                program = [];
-                for n = 1 : nrCycles
-                    value = ~value;
-                    program = [program ones(1,nrFramesCycle)*value]; %#ok<AGROW>
-                end
-                
-                counter = 0;
                 
                 when = StartTime + EP.Data{evt+1,2} - S.PTB.slack*3;
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 while lastFlipOnset < when
                     
-                    counter = counter + 1;
                     
-                    Text_mvt. Draw
-                    Text_side.Draw
+                    QUESTION.Draw
+                    YES.     Draw
+                    NO.      Draw
                     
-                    if program(counter)
-                        CROSS.Draw
-                    end
+                    ELEC.UpdateCursor( CURSOR )
+                    CURSOR.  Draw
                     
                     Screen('DrawingFinished', S.PTB.wPtr);
                     lastFlipOnset = Screen('Flip', S.PTB.wPtr);

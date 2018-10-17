@@ -64,7 +64,7 @@ Parameters.Text.ClickCorlor = [0   255 0  ]; % [R G B] ( from 0 to 255 )
 %%%%%%%%%%%%%%%
 
 % Small cross at the center => @FixationCross
-Parameters.Cross.ScreenRatio     = 0.20;          % ratio : dim   = ScreenHeight*ratio_screen
+Parameters.Cross.ScreenRatio     = 0.10;          % ratio : dim   = ScreenHeight*ratio_screen
 Parameters.Cross.lineWidthRatio  = 0.05;          % ratio : width = dim         *ratio_width
 Parameters.Cross.Color           = [255 255 255]; % [R G B] ( from 0 to 255 )
 
@@ -73,15 +73,20 @@ Parameters.Question.Content = 'Sensation de mouvement ?';
 Parameters.Question.Color   = Parameters.Text.Color;
 Parameters.Question.Xpos    = 0.50;
 Parameters.Question.Ypos    = 0.20;
-Parameters.Yes.Content = 'Oui';
-Parameters.Yes.Color   = Parameters.Text.Color;
-Parameters.Yes.Xpos    = 0.75;
-Parameters.Yes.Ypos    = 0.40;
-Parameters.No.Content = 'Non';
-Parameters.No.Color   = Parameters.Text.Color;
-Parameters.No.Xpos    = 0.25;
-Parameters.No.Ypos    = 0.40;
+Parameters.Yes.Content      = 'Oui';
+Parameters.Yes.Color        = Parameters.Text.Color;
+Parameters.Yes.Xpos         = 0.75;
+Parameters.Yes.Ypos         = 0.40;
+Parameters.No.Content       = 'Non';
+Parameters.No.Color         = Parameters.Text.Color;
+Parameters.No.Xpos          = 0.25;
+Parameters.No.Ypos          = 0.40;
 
+% Cursor => @Dot
+Parameters.Cursor.DimensionRatio = 0.04;          % diameter = DimensionRatio*ScreenHeight
+Parameters.Cursor.DiskColor      = [255 255 255]; % [R G B] ( from 0 to 255 )
+Parameters.Cursor.FrameColor     = [0 0 0];       % [R G B] ( from 0 to 255 )
+Parameters.Cursor.Ypos           = 0.60;
 
 %%%%%%%%%%%%%%
 %  Keybinds  %

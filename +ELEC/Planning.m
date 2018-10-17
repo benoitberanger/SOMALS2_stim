@@ -18,7 +18,7 @@ switch S.OperationMode
         Parameters.NrRepetitions       = Parameters.NrPulsesTotal/Parameters.ActivityDuration/Parameters.Frequency;
         Parameters.NrPulsesBlock       = Parameters.ActivityDuration*Parameters.Frequency;
     case 'FastDebug'
-        Parameters.RestDuration        = [2 3];  % second
+        Parameters.RestDuration        = [0.5 1];  % second
         Parameters.PulseDuration       = 1;% ms
         Parameters.ActivityDuration    = 5;  % second
         Parameters.NrPulsesTotal       = 10;
@@ -78,7 +78,7 @@ EP.AddStartTime('StartTime',0);
 
 restdur = Parameters.RestDuration(1) + (Parameters.RestDuration(2)-Parameters.RestDuration(1))*rand;
 EP.AddPlanning({ 'Rest' NextOnset(EP) restdur [] })
-    
+
 for evt = 1 : NrTrials
     
     name = Parameters.ConditionOrder_str{evt};

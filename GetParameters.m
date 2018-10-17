@@ -69,24 +69,35 @@ Parameters.Cross.lineWidthRatio  = 0.05;          % ratio : width = dim         
 Parameters.Cross.Color           = [255 255 255]; % [R G B] ( from 0 to 255 )
 
 % All texts => @Text
-Parameters.Question.Content = 'Sensation de mouvement ?';
-Parameters.Question.Color   = Parameters.Text.Color;
-Parameters.Question.Xpos    = 0.50;
-Parameters.Question.Ypos    = 0.20;
-Parameters.Yes.Content      = 'Oui';
-Parameters.Yes.Color        = Parameters.Text.Color;
-Parameters.Yes.Xpos         = 0.75;
-Parameters.Yes.Ypos         = 0.40;
-Parameters.No.Content       = 'Non';
-Parameters.No.Color         = Parameters.Text.Color;
-Parameters.No.Xpos          = 0.25;
-Parameters.No.Ypos          = 0.40;
+Parameters.Question.Content    = 'Sensation de mouvement ?';
+Parameters.Question.Color      = Parameters.Text.Color;
+Parameters.Question.Xpos       = 0.50;
+Parameters.Question.Ypos       = 0.20;
+
+Parameters.Yes     .Content    = 'Oui';
+Parameters.Yes     .Color      = Parameters.Text.Color;
+Parameters.Yes     .Xpos       = 0.25;
+Parameters.Yes     .Ypos       = 0.50;
+Parameters.Yes     .RectX      = 0.35;
+Parameters.Yes     .RectY      = 0.80;
+Parameters.Yes     .FrameColor = [0 0 0];
+Parameters.Yes     .FillColor  = Parameters.Video.ScreenBackgroundColor;
+
+Parameters.No      .Content = 'Non';
+Parameters.No      .Color      = Parameters.Text.Color;
+Parameters.No      .Xpos       = 1 - Parameters.Yes.Xpos;
+Parameters.No      .Ypos       = Parameters.Yes.Ypos;
+Parameters.No      .RectX      = Parameters.Yes.RectX;
+Parameters.No      .RectY      = Parameters.Yes.RectY;
+Parameters.No      .FrameColor = Parameters.Yes.FrameColor;
+Parameters.No      .FillColor  = Parameters.Yes.FillColor;
 
 % Cursor => @Dot
 Parameters.Cursor.DimensionRatio = 0.04;          % diameter = DimensionRatio*ScreenHeight
 Parameters.Cursor.DiskColor      = [255 255 255]; % [R G B] ( from 0 to 255 )
 Parameters.Cursor.FrameColor     = [0 0 0];       % [R G B] ( from 0 to 255 )
 Parameters.Cursor.Ypos           = 0.60;
+
 
 %%%%%%%%%%%%%%
 %  Keybinds  %

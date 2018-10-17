@@ -22,6 +22,7 @@ try
     [ QUESTION, YES, NO ] = ELEC.Prepare.Text;
     [ CROSS             ] = ELEC.Prepare.Cross;
     [ CURSOR            ] = ELEC.Prepare.Cursor;
+    [ RECT_YES, RECT_NO ] = ELEC.Prepare.Rect;
     
     
     %% Eyelink
@@ -103,6 +104,8 @@ try
             case {'Nerve', 'Skin'}
                 
                 QUESTION.Draw
+                RECT_YES.Draw
+                RECT_NO. Draw
                 YES.     Draw
                 NO.      Draw
                 
@@ -123,6 +126,8 @@ try
                     
                     
                     QUESTION.Draw
+                    RECT_YES.Draw
+                    RECT_NO. Draw
                     YES.     Draw
                     NO.      Draw
                     

@@ -4,7 +4,7 @@ global S
 try
     %% Tunning of the task
     
-    [ EP, Parameters ] = ELEC.Planning;
+    [ EP, Parameters ] = PNEU.Planning;
     TaskData.Parameters = Parameters;
     
     % End of preparations
@@ -19,10 +19,10 @@ try
     
     %% Prepare objects
     
-    [ QUESTION, YES, NO ] = ELEC.Prepare.Text;
-    [ CROSS             ] = ELEC.Prepare.Cross;
-    [ CURSOR            ] = ELEC.Prepare.Cursor;
-    [ RECT_YES, RECT_NO ] = ELEC.Prepare.Rect;
+    [ QUESTION, YES, NO ] = PNEU.Prepare.Text;
+    [ CROSS             ] = PNEU.Prepare.Cross;
+    [ CURSOR            ] = PNEU.Prepare.Cursor;
+    [ RECT_YES, RECT_NO ] = PNEU.Prepare.Rect;
     
     
     %% Eyelink
@@ -47,10 +47,10 @@ try
                 % Fetch initialization data
                 switch S.InputMethod
                     case 'Joystick'
-                        [newX, ~] = ELEC.QueryJoystickData( CURSOR.screenX, CURSOR.screenY );
+                        [newX, ~] = PNEU.QueryJoystickData( CURSOR.screenX, CURSOR.screenY );
                     case 'Mouse'
                         SetMouse(CURSOR.Xorigin,CURSOR.Yorigin,CURSOR.wPtr);
-                        [newX, ~] = ELEC.QueryMouseData( CURSOR.wPtr, CURSOR.Xorigin, CURSOR.Yorigin );
+                        [newX, ~] = PNEU.QueryMouseData( CURSOR.wPtr, CURSOR.Xorigin, CURSOR.Yorigin );
                 end
                 
                 % Initialize cursor position
@@ -109,7 +109,7 @@ try
                 YES.     Draw
                 NO.      Draw
                 
-                ELEC.UpdateCursor( CURSOR )
+                PNEU.UpdateCursor( CURSOR )
                 CURSOR.  Draw
                 
                 when = StartTime + EP.Data{evt,2} - S.PTB.slack;
@@ -124,14 +124,13 @@ try
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 while lastFlipOnset < when
                     
-                    
                     QUESTION.Draw
                     RECT_YES.Draw
                     RECT_NO. Draw
                     YES.     Draw
                     NO.      Draw
                     
-                    ELEC.UpdateCursor( CURSOR )
+                    PNEU.UpdateCursor( CURSOR )
                     CURSOR.  Draw
                     
                     Screen('DrawingFinished', S.PTB.wPtr);

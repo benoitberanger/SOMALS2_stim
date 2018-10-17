@@ -83,7 +83,7 @@ Parameters.Yes     .RectY      = 0.80;
 Parameters.Yes     .FrameColor = [0 0 0];
 Parameters.Yes     .FillColor  = Parameters.Video.ScreenBackgroundColor;
 
-Parameters.No      .Content = 'Non';
+Parameters.No      .Content    = 'Non';
 Parameters.No      .Color      = Parameters.Text.Color;
 Parameters.No      .Xpos       = 1 - Parameters.Yes.Xpos;
 Parameters.No      .Ypos       = Parameters.Yes.Ypos;

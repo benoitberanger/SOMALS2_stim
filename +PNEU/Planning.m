@@ -17,6 +17,7 @@ switch S.OperationMode
         Parameters.Frequency           = 2;% Hz
         Parameters.NrRepetitions       = Parameters.NrPulsesTotal/Parameters.ActivityDuration/Parameters.Frequency;
         Parameters.NrPulsesBlock       = Parameters.ActivityDuration*Parameters.Frequency;
+        Parameters.ValidationTime      = 1; % second
     case 'FastDebug'
         Parameters.RestDuration        = [0.5 1];  % second
         Parameters.PulseDuration       = 1;% ms
@@ -25,6 +26,7 @@ switch S.OperationMode
         Parameters.Frequency           = 2;% Hz
         Parameters.NrRepetitions       = Parameters.NrPulsesTotal/Parameters.ActivityDuration/Parameters.Frequency;
         Parameters.NrPulsesBlock       = Parameters.ActivityDuration*Parameters.Frequency;
+        Parameters.ValidationTime      = 1; % second
     case 'RealisticDebug'
         Parameters.RestDuration        = [10 15];  % second
         Parameters.PulseDuration       = 1;% ms
@@ -33,6 +35,7 @@ switch S.OperationMode
         Parameters.Frequency           = 2;% Hz
         Parameters.NrRepetitions       = Parameters.NrPulsesTotal/Parameters.ActivityDuration/Parameters.Frequency;
         Parameters.NrPulsesBlock       = Parameters.ActivityDuration*Parameters.Frequency;
+        Parameters.ValidationTime      = 1; % second
 end
 
 

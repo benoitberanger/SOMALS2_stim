@@ -12,6 +12,7 @@ classdef Rect < baseObject
         
         baseFrameColor    = zeros(0,4) % [R G B a] from 0 to 255
         currentFrameColor = zeros(0,4) % [R G B a] from 0 to 255
+        thickness         = zeros(0)   % thickness in pixel of the frame
         
         baseFillColor     = zeros(0,4) % [R G B a] from 0 to 255
         currentFillColor  = zeros(0,4) % [R G B a] from 0 to 255
@@ -28,7 +29,7 @@ classdef Rect < baseObject
         % -----------------------------------------------------------------
         %                           Constructor
         % -----------------------------------------------------------------
-        function self = Rect( rect, framecolor, fillcolor )
+        function self = Rect( rect, framecolor, fillcolor, thickness )
             
             % ================ Check input argument =======================
             
@@ -54,6 +55,7 @@ classdef Rect < baseObject
                 self.currentFrameColor = framecolor;
                 self.baseFillColor     = fillcolor ;
                 self.currentFillColor  = fillcolor ;
+                self.thickness         = thickness ;
                 
                 % ================== Callback =============================
                                 

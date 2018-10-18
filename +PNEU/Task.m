@@ -34,6 +34,8 @@ try
     
     % Initialize some variables
     EXIT = 0;
+    onset_YES = [];
+    onset_NO  = [];
     
     % Loop over the EventPlanning
     for evt = 1 : size( EP.Data , 1 )
@@ -67,16 +69,16 @@ try
                 [ ER, RR, StopTime ] = Common.StopTimeEvent( EP, ER, RR, StartTime, evt );
                 
                 
-            case 'Rest'
+            case 'Rest' % -------------------------------------------------
                 
                 CROSS.Draw
                 
                 when = StartTime + EP.Data{evt,2} - S.PTB.slack;
                 Screen('DrawingFinished', S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
-                Common.SendParPortMessage(EP.Data{evt,1});
-                
+                % Common.SendParPortMessage(EP.Data{evt,1});
                 ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] EP.Data{evt,4:end}});
+                RR.AddEvent({[EP.Data{evt,1} '_CROSS'] lastFlipOnset-StartTime [] []});
                 
                 when = StartTime + EP.Data{evt+1,2} - S.PTB.slack;
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -101,7 +103,7 @@ try
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 
                 
-            case {'Nerve', 'Skin'}
+            case {'Nerve', 'Skin'} % --------------------------------------
                 
                 QUESTION.Draw
                 RECT_YES.Draw
@@ -116,14 +118,38 @@ try
                 Screen('DrawingFinished', S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
                 Common.SendParPortMessage(EP.Data{evt,1});
-                
                 ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] EP.Data{evt,4:end}});
+                RR.AddEvent({[EP.Data{evt,1} '_QUESTION'] lastFlipOnset-StartTime [] []});
                 
-                
-                when = StartTime + EP.Data{evt+1,2} - S.PTB.slack*3;
+                when = StartTime + EP.Data{evt+1,2} - S.PTB.slack;
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 while lastFlipOnset < when
                     
+                    is_in_YES = CURSOR.Rect(3)-RECT_YES.currentRect(3) <= 0;
+                    is_in_NO  = CURSOR.Rect(1)-RECT_NO .currentRect(1) >= 0;
+                    
+                    if is_in_YES
+                        RECT_YES.currentFrameColor = [0 255 0];
+                        if lastFlipOnset - onset_YES > Parameters.ValidationTime
+                            RR.AddEvent({[EP.Data{evt,1} '_QUESTION_validYES'] lastFlipOnset-StartTime [] []});
+                            break
+                        end
+                    else
+                        RECT_YES.currentFrameColor  =  RECT_YES.baseFrameColor;
+                        onset_YES = [];
+                    end
+                    
+                    if is_in_NO
+                        RECT_NO.currentFrameColor = [0 255 0];
+                        if lastFlipOnset - onset_NO > Parameters.ValidationTime
+                            RR.AddEvent({[EP.Data{evt,1} '_QUESTION_validNO'] lastFlipOnset-StartTime [] []});
+                            break
+                        end
+                    else
+                        RECT_NO.currentFrameColor  =  RECT_NO.baseFrameColor;
+                        onset_NO = [];
+                    end
+
                     QUESTION.Draw
                     RECT_YES.Draw
                     RECT_NO. Draw
@@ -138,6 +164,48 @@ try
                     
                     % Fetch keys
                     [keyIsDown, ~, keyCode] = KbCheck;
+                    
+                    if keyIsDown
+                        % ~~~ ESCAPE key ? ~~~
+                        [ EXIT, StopTime ] = Common.Interrupt( keyCode, ER, RR, StartTime );
+                        if EXIT
+                            break
+                        end
+                    end
+                    
+                    if is_in_YES && isempty(onset_YES)
+                        onset_YES = lastFlipOnset;
+                        RR.AddEvent({[EP.Data{evt,1} '_QUESTION_inYES'] lastFlipOnset-StartTime [] []});
+                    end
+                    
+                    if is_in_NO && isempty(onset_NO)
+                        onset_NO = lastFlipOnset;
+                        RR.AddEvent({[EP.Data{evt,1} '_QUESTION_inNO'] lastFlipOnset-StartTime [] []});
+                    end
+                    
+                end % while
+                if EXIT
+                    break
+                end
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                
+                
+                CROSS.Draw
+                
+                when = StartTime + EP.Data{evt,2} - S.PTB.slack;
+                Screen('DrawingFinished', S.PTB.wPtr);
+                lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                % Common.SendParPortMessage(EP.Data{evt,1});
+                RR.AddEvent({[EP.Data{evt,1} '_validCROSS'] lastFlipOnset-StartTime [] []});
+                
+                
+                when = StartTime + EP.Data{evt+1,2} - S.PTB.slack;
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                secs = lastFlipOnset;
+                while secs < when
+                    
+                    % Fetch keys
+                    [keyIsDown, secs, keyCode] = KbCheck;
                     
                     if keyIsDown
                         % ~~~ ESCAPE key ? ~~~

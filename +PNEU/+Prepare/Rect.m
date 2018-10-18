@@ -11,12 +11,14 @@ rect       = [
     S.PTB.wRect(4)
     ]';
 framecolor = S.Parameters.Yes.FrameColor;
+thickness  = S.Parameters.Yes.Thickness * S.PTB.wRect(3);
 fillcolor  = S.Parameters.Yes.FillColor;
 
 RECT_YES = Rect(...
     rect       ,...
     framecolor ,...
-    fillcolor  );
+    fillcolor  ,...
+    thickness  );
 
 RECT_YES.LinkToWindowPtr( S.PTB.wPtr )
 
@@ -32,12 +34,14 @@ rect       = [
     S.PTB.wRect(4)
     ]';
 framecolor = S.Parameters.No.FrameColor;
+thickness  = S.Parameters.No.Thickness * S.PTB.wRect(3);
 fillcolor  = S.Parameters.No.FillColor;
 
 RECT_NO = Rect(...
     rect       ,...
     framecolor ,...
-    fillcolor  );
+    fillcolor  ,...
+    thickness  );
 
 RECT_NO.LinkToWindowPtr( S.PTB.wPtr )
 

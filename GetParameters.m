@@ -80,7 +80,8 @@ Parameters.Yes     .Xpos       = 0.25;
 Parameters.Yes     .Ypos       = 0.50;
 Parameters.Yes     .RectX      = 0.35;
 Parameters.Yes     .RectY      = 0.80;
-Parameters.Yes     .FrameColor = [0 0 0];
+Parameters.Yes     .FrameColor = Parameters.Video.ScreenBackgroundColor/2;
+Parameters.Yes     .Thickness  = 0.005;
 Parameters.Yes     .FillColor  = Parameters.Video.ScreenBackgroundColor;
 
 Parameters.No      .Content    = 'Non';
@@ -90,6 +91,7 @@ Parameters.No      .Ypos       = Parameters.Yes.Ypos;
 Parameters.No      .RectX      = Parameters.Yes.RectX;
 Parameters.No      .RectY      = Parameters.Yes.RectY;
 Parameters.No      .FrameColor = Parameters.Yes.FrameColor;
+Parameters.No      .Thickness  = Parameters.Yes.Thickness;
 Parameters.No      .FillColor  = Parameters.Yes.FillColor;
 
 % Cursor => @Dot

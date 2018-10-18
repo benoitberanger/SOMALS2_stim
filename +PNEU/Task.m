@@ -103,7 +103,41 @@ try
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 
                 
-            case {'Nerve', 'Skin'} % --------------------------------------
+            case {'Bone', 'Tendon'} % --------------------------------------
+                
+                CROSS.Draw
+                
+                when = StartTime + EP.Data{evt,2} - S.PTB.slack;
+                Screen('DrawingFinished', S.PTB.wPtr);
+                lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                % Common.SendParPortMessage(EP.Data{evt,1});
+                ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] EP.Data{evt,4:end}});
+                RR.AddEvent({[EP.Data{evt,1} '_CROSS'] lastFlipOnset-StartTime [] []});
+                
+                when = lastFlipOnset + EP.Data{evt,5} - S.PTB.slack;
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                secs = lastFlipOnset;
+                while secs < when
+                    
+                    % Fetch keys
+                    [keyIsDown, secs, keyCode] = KbCheck;
+                    
+                    if keyIsDown
+                        % ~~~ ESCAPE key ? ~~~
+                        [ EXIT, StopTime ] = Common.Interrupt( keyCode, ER, RR, StartTime );
+                        if EXIT
+                            break
+                        end
+                    end
+                    
+                end % while
+                if EXIT
+                    break
+                end
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                
+                
+                
                 
                 QUESTION.Draw
                 RECT_YES.Draw
@@ -114,11 +148,10 @@ try
                 PNEU.UpdateCursor( CURSOR )
                 CURSOR.  Draw
                 
-                when = StartTime + EP.Data{evt,2} - S.PTB.slack;
+                when = StartTime + EP.Data{evt,4} - S.PTB.slack;
                 Screen('DrawingFinished', S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
                 Common.SendParPortMessage(EP.Data{evt,1});
-                ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] EP.Data{evt,4:end}});
                 RR.AddEvent({[EP.Data{evt,1} '_QUESTION'] lastFlipOnset-StartTime [] []});
                 
                 when = StartTime + EP.Data{evt+1,2} - S.PTB.slack;
@@ -130,8 +163,9 @@ try
                     
                     if is_in_YES
                         RECT_YES.currentFrameColor = [0 255 0];
-                        if lastFlipOnset - onset_YES > Parameters.ValidationTime
+                        if lastFlipOnset - onset_YES > Parameters.TimeToValidate
                             RR.AddEvent({[EP.Data{evt,1} '_QUESTION_validYES'] lastFlipOnset-StartTime [] []});
+                            RECT_YES.currentFrameColor  =  RECT_YES.baseFrameColor;
                             break
                         end
                     else
@@ -141,8 +175,9 @@ try
                     
                     if is_in_NO
                         RECT_NO.currentFrameColor = [0 255 0];
-                        if lastFlipOnset - onset_NO > Parameters.ValidationTime
+                        if lastFlipOnset - onset_NO > Parameters.TimeToValidate
                             RR.AddEvent({[EP.Data{evt,1} '_QUESTION_validNO'] lastFlipOnset-StartTime [] []});
+                            RECT_NO.currentFrameColor  =  RECT_NO.baseFrameColor;
                             break
                         end
                     else
@@ -190,6 +225,8 @@ try
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 
                 
+                
+                
                 CROSS.Draw
                 
                 when = StartTime + EP.Data{evt,2} - S.PTB.slack;
@@ -220,6 +257,7 @@ try
                     break
                 end
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                
                 
                 
             otherwise % ---------------------------------------------------

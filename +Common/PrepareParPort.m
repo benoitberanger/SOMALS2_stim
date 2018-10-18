@@ -21,9 +21,13 @@ end
 
 
 % fill here...
-msg.Rest  = 1;
-msg.Skin  = 2;
-msg.Nerve = 3;
+msg.Rest   = 1;
+
+msg.Skin   = 2;
+msg.Nerve  = 3;
+
+msg.Bone   = 4;
+msg.Tendon = 5;
 
 
 %% Finalize

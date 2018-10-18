@@ -602,7 +602,7 @@ else % Create the figure
     
     
     
-    %% Panel : Task : ADAPT
+    %% Panel : Task
     
     panelProp.countP = panelProp.countP - 1;
     
@@ -613,7 +613,7 @@ else % Create the figure
     p_task.h = panelProp.unitWidth*panelProp.vect(panelProp.countP);
     
     handles.uipanel_Task = uibuttongroup(handles.(mfilename),...
-        'Title','TAsk',...
+        'Title','Task',...
         'Units', 'Normalized',...
         'Position',[p_task.x p_task.y p_task.w p_task.h],...
         'BackgroundColor',figureBGcolor);
@@ -658,18 +658,79 @@ else % Create the figure
         'Callback',@main_SOMALS2);
     
     
+    %% Panel : Stim ON / OFF
+    
+    p_task.count = 0;
+    p_task.count = p_task.count + 1;
+    
+    p_stimonoff.x   = p_task.xpos(p_task.count);
+    p_stimonoff.w   = p_task.xwidth(p_task.count);
+    
+    p_stimonoff.y = b_PNEU.y + b_PNEU.h + 0.10;
+    p_stimonoff.h = 1 - p_stimonoff.y - 0.00;
+    
+    handles.uipanel_StimOnOff = uibuttongroup(handles.uipanel_Task,...
+        'Title','Stim ON / OFF',...
+        'TitlePosition','lefttop',...
+        'Units', 'Normalized',...
+        'Position',[p_stimonoff.x p_stimonoff.y p_stimonoff.w p_stimonoff.h],...
+        'BackgroundColor',figureBGcolor);
+    
+    
+    p_stimonoff.nbO    = 2; % Number of objects
+    p_stimonoff.Ow     = 1/(p_stimonoff.nbO + 1); % Object width
+    p_stimonoff.countO = 0; % Object counter
+    p_stimonoff.xposO  = @(countO) p_stimonoff.Ow/(p_stimonoff.nbO+1)*countO + (countO-1)*p_stimonoff.Ow;
+    
+    
+    % ---------------------------------------------------------------------
+    % RadioButton : Stim ON
+    
+    p_stimonoff.countO = p_stimonoff.countO + 1;
+    r_stimon.x   = p_stimonoff.xposO(p_stimonoff.countO);
+    r_stimon.y   = 0.1;
+    r_stimon.w   = p_stimonoff.Ow;
+    r_stimon.h   = 0.8;
+    r_stimon.tag = 'radiobutton_StimON';
+    handles.(r_stimon.tag) = uicontrol(handles.uipanel_StimOnOff,...
+        'Style','radiobutton',...
+        'Units', 'Normalized',...
+        'Position',[r_stimon.x r_stimon.y r_stimon.w r_stimon.h],...
+        'String','ON',...
+        'HorizontalAlignment','Center',...
+        'Tag',r_stimon.tag,...
+        'BackgroundColor',figureBGcolor,...
+        'Tooltip','');
+    
+    
+    % ---------------------------------------------------------------------
+    % RadioButton : Stim OFF
+    
+    p_stimonoff.countO = p_stimonoff.countO + 1;
+    r_stimoff.x   = p_stimonoff.xposO(p_stimonoff.countO);
+    r_stimoff.y   = r_stimon.y;
+    r_stimoff.w   = p_stimonoff.Ow;
+    r_stimoff.h   = r_stimon.h;
+    r_stimoff.tag = 'radiobutton_StimOFF';
+    handles.(r_stimoff.tag) = uicontrol(handles.uipanel_StimOnOff,...
+        'Style','radiobutton',...
+        'Units', 'Normalized',...
+        'Position',[r_stimoff.x r_stimoff.y r_stimoff.w r_stimoff.h],...
+        'String','OFF',...
+        'HorizontalAlignment','Center',...
+        'Tag',r_stimoff.tag,...
+        'BackgroundColor',figureBGcolor);
+    
+    
     %% Panel : Cursor input method
     
-    %     p_task.count = 0;
-    %     p_task.count  = p_task.count + 1;
-    %     p_cursorinput.x   = p_task.xpos(p_task.count);
-    %     p_cursorinput.w   = p_task.xwidth(p_task.count);
+    p_task.count  = p_task.count + 1;
     
-    p_cursorinput.x   = panelProp.xposP;
-    p_cursorinput.w   = panelProp.wP;
+    p_cursorinput.x   = p_task.xpos(p_task.count);
+    p_cursorinput.w   = p_task.xwidth(p_task.count);
     
-    p_cursorinput.y = b_PNEU.y + b_PNEU.h + 0.10;
-    p_cursorinput.h = 1 - p_cursorinput.y - 0.00;
+    p_cursorinput.y = p_stimonoff.y;
+    p_cursorinput.h = p_stimonoff.h;
     
     handles.uipanel_CursorInput = uibuttongroup(handles.uipanel_Task,...
         'Title','Cursor input method',...
@@ -691,9 +752,9 @@ else % Create the figure
     
     p_cursorinput.countO = p_cursorinput.countO + 1;
     r_joystick.x   = p_cursorinput.xposO(p_cursorinput.countO);
-    r_joystick.y   = 0.1 ;
+    r_joystick.y   = r_stimon.y;
     r_joystick.w   = p_cursorinput.Ow;
-    r_joystick.h   = 0.8;
+    r_joystick.h   = r_stimon.h;
     r_joystick.tag = 'radiobutton_Joystick';
     handles.(r_joystick.tag) = uicontrol(handles.uipanel_CursorInput,...
         'Style','radiobutton',...
@@ -712,9 +773,9 @@ else % Create the figure
     
     p_cursorinput.countO = p_cursorinput.countO + 1;
     r_mouse.x   = p_cursorinput.xposO(p_cursorinput.countO);
-    r_mouse.y   = 0.1 ;
+    r_mouse.y   = r_stimon.y ;
     r_mouse.w   = p_cursorinput.Ow;
-    r_mouse.h   = 0.8;
+    r_mouse.h   = r_stimon.h;
     r_mouse.tag = 'radiobutton_Mouse';
     handles.(r_mouse.tag) = uicontrol(handles.uipanel_CursorInput,...
         'Style','radiobutton',...
@@ -833,7 +894,7 @@ else % Create the figure
     
     figPtr = figHandle;
     
-        fprintf('\n')
+    fprintf('\n')
     fprintf('Response buttuns (fORRP 932) : \n')
     fprintf('USB \n')
     fprintf('TETHYX \n')

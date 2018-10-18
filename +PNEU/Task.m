@@ -14,7 +14,7 @@ try
     
     %% Prepare event record and keybinf logger
     
-    [ ER, RR, KL ] = Common.PrepareRecorders( EP );
+    [ ER, RR, KL, SR ] = Common.PrepareRecorders( EP );
     
     
     %% Prepare objects
@@ -34,8 +34,6 @@ try
     
     % Initialize some variables
     EXIT = 0;
-    onset_YES = [];
-    onset_NO  = [];
     
     % Loop over the EventPlanning
     for evt = 1 : size( EP.Data , 1 )
@@ -49,14 +47,14 @@ try
                 % Fetch initialization data
                 switch S.InputMethod
                     case 'Joystick'
-                        [newX, ~] = PNEU.QueryJoystickData( CURSOR.screenX, CURSOR.screenY );
+                        [newX, newY] = PNEU.QueryJoystickData( CURSOR.screenX, CURSOR.screenY );
                     case 'Mouse'
                         SetMouse(CURSOR.Xorigin,CURSOR.Yorigin,CURSOR.wPtr);
-                        [newX, ~] = PNEU.QueryMouseData( CURSOR.wPtr, CURSOR.Xorigin, CURSOR.Yorigin );
+                        [newX, newY] = PNEU.QueryMouseData( CURSOR.wPtr, CURSOR.Xorigin, CURSOR.Yorigin );
                 end
                 
                 % Initialize cursor position
-                CURSOR.Move(newX,0);
+                CURSOR.Move(newX,newY);
                 
                 CROSS.Draw
                 Screen('DrawingFinished',S.PTB.wPtr);
@@ -72,10 +70,12 @@ try
             case 'Rest' % -------------------------------------------------
                 
                 CROSS.Draw
+                PNEU.UpdateCursor( CURSOR )
                 
                 when = StartTime + EP.Data{evt,2} - S.PTB.slack;
                 Screen('DrawingFinished', S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                SR.AddSample([lastFlipOnset-StartTime CURSOR.X CURSOR.Y])
                 % Common.SendParPortMessage(EP.Data{evt,1});
                 ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] EP.Data{evt,4:end}});
                 RR.AddEvent({[EP.Data{evt,1} '_CROSS'] lastFlipOnset-StartTime [] []});
@@ -84,6 +84,13 @@ try
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 secs = lastFlipOnset;
                 while secs < when
+                    
+                    CROSS.Draw
+                    PNEU.UpdateCursor( CURSOR )
+                    
+                    Screen('DrawingFinished', S.PTB.wPtr);
+                    lastFlipOnset = Screen('Flip', S.PTB.wPtr);
+                    SR.AddSample([lastFlipOnset-StartTime CURSOR.X CURSOR.Y])
                     
                     % Fetch keys
                     [keyIsDown, secs, keyCode] = KbCheck;
@@ -105,19 +112,33 @@ try
                 
             case {'Bone', 'Tendon'} % --------------------------------------
                 
+                onset_YES = [];
+                onset_NO  = [];
+                
                 CROSS.Draw
+                PNEU.UpdateCursor( CURSOR )
                 
                 when = StartTime + EP.Data{evt,2} - S.PTB.slack;
                 Screen('DrawingFinished', S.PTB.wPtr);
-                lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                conditionFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                tic
+                SR.AddSample([conditionFlipOnset-StartTime CURSOR.X CURSOR.Y])
                 % Common.SendParPortMessage(EP.Data{evt,1});
-                ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] EP.Data{evt,4:end}});
-                RR.AddEvent({[EP.Data{evt,1} '_CROSS'] lastFlipOnset-StartTime [] []});
+                ER.AddEvent({EP.Data{evt,1} conditionFlipOnset-StartTime [] EP.Data{evt,4:end}});
+                RR.AddEvent({[EP.Data{evt,1} '_CROSS'] conditionFlipOnset-StartTime [] []});
                 
-                when = lastFlipOnset + EP.Data{evt,5} - S.PTB.slack;
+                when = conditionFlipOnset + EP.Data{evt,5} - S.PTB.slack;
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                secs = lastFlipOnset;
+                secs = conditionFlipOnset;
                 while secs < when
+                    
+                    CROSS.Draw
+                    PNEU.UpdateCursor( CURSOR )
+                    
+                    Screen('DrawingFinished', S.PTB.wPtr);
+                    lastFlipOnset = Screen('Flip', S.PTB.wPtr);
+                    
+                    SR.AddSample([lastFlipOnset-StartTime CURSOR.X CURSOR.Y])
                     
                     % Fetch keys
                     [keyIsDown, secs, keyCode] = KbCheck;
@@ -148,9 +169,10 @@ try
                 PNEU.UpdateCursor( CURSOR )
                 CURSOR.  Draw
                 
-                when = StartTime + EP.Data{evt,4} - S.PTB.slack;
+                when = conditionFlipOnset + EP.Data{evt,5} - S.PTB.slack;
                 Screen('DrawingFinished', S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                SR.AddSample([lastFlipOnset-StartTime CURSOR.X CURSOR.Y])
                 Common.SendParPortMessage(EP.Data{evt,1});
                 RR.AddEvent({[EP.Data{evt,1} '_QUESTION'] lastFlipOnset-StartTime [] []});
                 
@@ -184,7 +206,7 @@ try
                         RECT_NO.currentFrameColor  =  RECT_NO.baseFrameColor;
                         onset_NO = [];
                     end
-
+                    
                     QUESTION.Draw
                     RECT_YES.Draw
                     RECT_NO. Draw
@@ -196,6 +218,17 @@ try
                     
                     Screen('DrawingFinished', S.PTB.wPtr);
                     lastFlipOnset = Screen('Flip', S.PTB.wPtr);
+                    SR.AddSample([lastFlipOnset-StartTime CURSOR.X CURSOR.Y])
+                    
+                    if is_in_YES && isempty(onset_YES)
+                        onset_YES = lastFlipOnset;
+                        RR.AddEvent({[EP.Data{evt,1} '_QUESTION_inYES'] lastFlipOnset-StartTime [] []});
+                    end
+                    
+                    if is_in_NO && isempty(onset_NO)
+                        onset_NO = lastFlipOnset;
+                        RR.AddEvent({[EP.Data{evt,1} '_QUESTION_inNO'] lastFlipOnset-StartTime [] []});
+                    end
                     
                     % Fetch keys
                     [keyIsDown, ~, keyCode] = KbCheck;
@@ -208,16 +241,6 @@ try
                         end
                     end
                     
-                    if is_in_YES && isempty(onset_YES)
-                        onset_YES = lastFlipOnset;
-                        RR.AddEvent({[EP.Data{evt,1} '_QUESTION_inYES'] lastFlipOnset-StartTime [] []});
-                    end
-                    
-                    if is_in_NO && isempty(onset_NO)
-                        onset_NO = lastFlipOnset;
-                        RR.AddEvent({[EP.Data{evt,1} '_QUESTION_inNO'] lastFlipOnset-StartTime [] []});
-                    end
-                    
                 end % while
                 if EXIT
                     break
@@ -226,39 +249,49 @@ try
                 
                 
                 
-                
-                CROSS.Draw
-                
-                when = StartTime + EP.Data{evt,2} - S.PTB.slack;
-                Screen('DrawingFinished', S.PTB.wPtr);
-                lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
-                % Common.SendParPortMessage(EP.Data{evt,1});
-                RR.AddEvent({[EP.Data{evt,1} '_validCROSS'] lastFlipOnset-StartTime [] []});
-                
-                
-                when = StartTime + EP.Data{evt+1,2} - S.PTB.slack;
-                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                secs = lastFlipOnset;
-                while secs < when
+                if is_in_YES || is_in_NO
                     
-                    % Fetch keys
-                    [keyIsDown, secs, keyCode] = KbCheck;
+                    CROSS.Draw
+                    PNEU.UpdateCursor( CURSOR )
                     
-                    if keyIsDown
-                        % ~~~ ESCAPE key ? ~~~
-                        [ EXIT, StopTime ] = Common.Interrupt( keyCode, ER, RR, StartTime );
-                        if EXIT
-                            break
+                    when = StartTime + EP.Data{evt,2} - S.PTB.slack;
+                    Screen('DrawingFinished', S.PTB.wPtr);
+                    lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                    SR.AddSample([lastFlipOnset-StartTime CURSOR.X CURSOR.Y])
+                    % Common.SendParPortMessage(EP.Data{evt,1});
+                    RR.AddEvent({[EP.Data{evt,1} '_validCROSS'] lastFlipOnset-StartTime [] []});
+                    
+                    
+                    when = StartTime + EP.Data{evt+1,2} - S.PTB.slack;
+                    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                    secs = lastFlipOnset;
+                    while secs < when
+                        
+                        CROSS.Draw
+                        PNEU.UpdateCursor( CURSOR )
+                        
+                        Screen('DrawingFinished', S.PTB.wPtr);
+                        lastFlipOnset = Screen('Flip', S.PTB.wPtr);
+                        SR.AddSample([lastFlipOnset-StartTime CURSOR.X CURSOR.Y])
+                        
+                        % Fetch keys
+                        [keyIsDown, secs, keyCode] = KbCheck;
+                        
+                        if keyIsDown
+                            % ~~~ ESCAPE key ? ~~~
+                            [ EXIT, StopTime ] = Common.Interrupt( keyCode, ER, RR, StartTime );
+                            if EXIT
+                                break
+                            end
                         end
+                        
+                    end % while
+                    if EXIT
+                        break
                     end
+                    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                     
-                end % while
-                if EXIT
-                    break
                 end
-                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                
-                
                 
             otherwise % ---------------------------------------------------
                 
@@ -279,7 +312,7 @@ try
     % Close the audio device
     % PsychPortAudio('Close');
     
-    TaskData = Common.EndOfStimulation( TaskData, EP, ER, RR, KL, StartTime, StopTime );
+    TaskData = Common.EndOfStimulation( TaskData, EP, ER, RR, KL, SR, StartTime, StopTime );
     
     % TaskData.BR = BR;
     % assignin('base','BR', BR)

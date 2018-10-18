@@ -187,6 +187,24 @@ S.ParPortMessages = Common.PrepareParPort;
 handles.ParPort    = ParPort;
 
 
+%% GUI : Task : Stim ON / OFF ?
+
+if isempty(get(handles.uipanel_StimOnOff,'SelectedObject'))
+    error('Select Stim ON / OFF')
+end
+
+switch get(get(handles.uipanel_StimOnOff,'SelectedObject'),'Tag')
+    case 'radiobutton_StimON'
+        StimONOFF = 'ON';
+    case 'radiobutton_StimOFF'
+        StimONOFF = 'OFF';
+    otherwise
+        warning('SOMALS2:StimONOFF','Error in StimONOFF')
+end
+
+S.StimONOFF = StimONOFF;
+
+
 %% GUI : Task : input method ?
 
 if isempty(get(handles.uipanel_CursorInput,'SelectedObject'))
@@ -239,7 +257,6 @@ switch get(get(handles.uipanel_EyelinkMode,'SelectedObject'),'Tag')
         name_num = randi(ln_str,[1 eyelink_max_finename]);
         name_str = str(name_num);
         
-        EyelinkFile = name_str;
         S.EyelinkFile = name_str;
         
     otherwise

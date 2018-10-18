@@ -19,7 +19,8 @@ obj.R     = sqrt(obj.X*obj.X + obj.Y*obj.Y); % pixels
 obj.Theta = atan2(obj.Y,obj.X) * 180/pi    ; % degrees
 
 obj.Xptb = obj.X + obj.Xorigin;
-obj.Yptb = obj.Y + obj.Yorigin;
+obj.Yptb = 0     + obj.Yorigin;
+% obj.Yptb = obj.Y + obj.Yorigin;
 
 obj.Rect = CenterRectOnPoint([0 0 obj.diameter obj.diameter], obj.Xptb, obj.Yptb);
 

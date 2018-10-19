@@ -39,7 +39,7 @@ else % Create the figure
         'Name'            , mfilename                , ...
         'NumberTitle'     , 'off'                    , ...
         'Units'           , 'Pixels'                 , ...
-        'Position'        , [20, 20, 700, 700] , ...
+        'Position'        , [20, 20, 700, 740] , ...
         'Tag'             , mfilename                );
     
     figureBGcolor = [0.9 0.9 0.9]; set(figHandle,'Color',figureBGcolor);
@@ -47,7 +47,10 @@ else % Create the figure
     editBGcolor   = [1.0 1.0 1.0];
     
     % Create GUI handles : pointers to access the graphic objects
-    handles = guihandles(figHandle);
+    handles               = guihandles(figHandle);
+    handles.figureBGcolor = figureBGcolor;
+    handles.buttonBGcolor = buttonBGcolor;
+    handles.editBGcolor   = editBGcolor  ;
     
     
     %% Panel proportions
@@ -56,7 +59,7 @@ else % Create the figure
     panelProp.wP    = 1 - panelProp.xposP * 2;
     
     panelProp.vect  = ...
-        [1 2 2 1 2 ]; % relative proportions of each panel, from bottom to top
+        [0.75 2 3 1 0.75 1.5 ]; % relative proportions of each panel, from bottom to top
     
     panelProp.vectLength    = length(panelProp.vect);
     panelProp.vectTotal     = sum(panelProp.vect);
@@ -600,6 +603,24 @@ else % Create the figure
         'BackgroundColor',buttonBGcolor,...
         'Callback','Eyelink.ForceShutDown');
     
+    
+    %% Panel : GUI_VIBRA_IRM
+    
+    panelProp.countP = panelProp.countP - 1;
+    
+    p_vibra.x = panelProp.xposP;
+    p_vibra.w = panelProp.wP / 2;
+    
+    p_vibra.y = panelProp.yposP(panelProp.countP);
+    p_vibra.h = panelProp.unitWidth*panelProp.vect(panelProp.countP);
+    
+    handles.uipanel_VIBRA_IRM = uibuttongroup(handles.(mfilename),...
+        'Title','VIBRA_IRM',...
+        'Units', 'Normalized',...
+        'Position',[p_vibra.x p_vibra.y p_vibra.w p_vibra.h],...
+        'BackgroundColor',figureBGcolor);
+    
+    FTDI_VIBRA_IRM.GUI_VIBRA_IRM( handles.uipanel_VIBRA_IRM )
     
     
     %% Panel : Task

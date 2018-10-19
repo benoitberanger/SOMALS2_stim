@@ -40,8 +40,9 @@ classdef FTDI_VIBRA_IRM < handle
     
     methods(Static)
         
-        GUI_VIBRA_IRM
+        out = GUI_VIBRA_IRM( container )
         
     end % methods static
+    
     
 end % classdef

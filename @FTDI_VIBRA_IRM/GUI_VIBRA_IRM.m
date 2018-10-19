@@ -1,5 +1,6 @@
-function varargout = GUI_VIBRA_IRM
+function varargout = GUI_VIBRA_IRM( container )
 %GUI_VIBRA_IRM is the function that creates (or bring to focus) GUI_VIBRA_IRM
+% You can call FTDI_VIBRA_IRM.GUI_VIBRA_IRM( figHandle / uipanelHandle ) to UI inside another container
 
 % debug=1 closes previous figure and reopens it, and send the gui handles
 % to base workspace.
@@ -25,27 +26,43 @@ if ~isempty(figPtr) % Figure exists so brings it to the focus
     
 else % Create the figure
     
-    clc
-    rng('default')
-    rng('shuffle')
+    if ~exist( 'container' , 'var' )
+        
+        clc
+        rng('default')
+        rng('shuffle')
+        
+        % Create a figure
+        figHandle = figure( ...
+            'HandleVisibility', 'off',... % close all does not close the figure
+            'MenuBar'         , 'none'                   , ...
+            'Toolbar'         , 'none'                   , ...
+            'Name'            , mfilename                , ...
+            'NumberTitle'     , 'off'                    , ...
+            'Units'           , 'Pixels'                 , ...
+            'Position'        , [20, 20, 500, 500] , ...
+            'Tag'             , mfilename                );
+        
+        container = figHandle;
+        new_fig = 1;
+        
+    else
+        
+        figHandle = container;
+        new_fig = 0;
+        
+    end
     
-    % Create a figure
-    figHandle = figure( ...
-        'HandleVisibility', 'off',... % close all does not close the figure
-        'MenuBar'         , 'none'                   , ...
-        'Toolbar'         , 'none'                   , ...
-        'Name'            , mfilename                , ...
-        'NumberTitle'     , 'off'                    , ...
-        'Units'           , 'Pixels'                 , ...
-        'Position'        , [20, 20, 500, 500] , ...
-        'Tag'             , mfilename                );
-    
-    figureBGcolor = [0.9 0.9 0.9]; set(figHandle,'Color',figureBGcolor);
+    figureBGcolor = [0.9 0.9 0.9];
     buttonBGcolor = figureBGcolor - 0.1;
     editBGcolor   = [1.0 1.0 1.0];
     
+    if new_fig
+        set(figHandle,'Color',figureBGcolor);
+    end
+    
     % Create GUI handles : pointers to access the graphic objects
-    handles = guihandles(figHandle);
+    handles               = guihandles(figHandle);
     handles.figureBGcolor = figureBGcolor;
     handles.buttonBGcolor = buttonBGcolor;
     handles.editBGcolor   = editBGcolor  ;
@@ -78,7 +95,7 @@ else % Create the figure
     p_oc.y = panelProp.yposP(panelProp.countP);
     p_oc.h = panelProp.unitWidth*panelProp.vect(panelProp.countP);
     
-    handles.uipanel_OpenClose = uipanel(handles.(mfilename),...
+    handles.uipanel_OpenClose = uipanel(container,...
         'Title','Open / Close',...
         'Units', 'Normalized',...
         'Position',[p_oc.x p_oc.y p_oc.w p_oc.h],...
@@ -128,7 +145,7 @@ else % Create the figure
     p_tk.y = panelProp.yposP(panelProp.countP);
     p_tk.h = panelProp.unitWidth*panelProp.vect(panelProp.countP);
     
-    handles.uipanel_Valve = uibuttongroup(handles.(mfilename),...
+    handles.uipanel_Valve = uibuttongroup(container,...
         'Title','Valve control',...
         'Units', 'Normalized',...
         'Position',[p_tk.x p_tk.y p_tk.w p_tk.h],...

@@ -53,7 +53,7 @@ S.Task = Task;
 
 
 % %% GUI : Environement selection
-% 
+%
 % switch get(get(handles.uipanel_Environement,'SelectedObject'),'Tag')
 %     case 'radiobutton_MRI'
 %         Environement = 'MRI';
@@ -62,7 +62,7 @@ S.Task = Task;
 %     otherwise
 %         warning('SOMALS2:ModeSelection','Error in Environement selection')
 % end
-% 
+%
 % S.Environement = Environement;
 
 

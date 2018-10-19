@@ -39,7 +39,7 @@ else % Create the figure
         'Name'            , mfilename                , ...
         'NumberTitle'     , 'off'                    , ...
         'Units'           , 'Pixels'                 , ...
-        'Position'        , [20, 20, 700, 740] , ...
+        'Position'        , [20, 20, 700, 720] , ...
         'Tag'             , mfilename                );
     
     figureBGcolor = [0.9 0.9 0.9]; set(figHandle,'Color',figureBGcolor);
@@ -620,8 +620,11 @@ else % Create the figure
         'Position',[p_vibra.x p_vibra.y p_vibra.w p_vibra.h],...
         'BackgroundColor',figureBGcolor);
     
-    FTDI_VIBRA_IRM.GUI_VIBRA_IRM( handles.uipanel_VIBRA_IRM )
-    
+    handle_VIBRA_IRM = FTDI_VIBRA_IRM.GUI_VIBRA_IRM( handles.uipanel_VIBRA_IRM );
+    f = fieldnames(handle_VIBRA_IRM);
+    for i = 1:length(f)
+        handles.(f{i}) = handle_VIBRA_IRM.(f{i});
+    end
     
     %% Panel : Task
     

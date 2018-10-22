@@ -28,10 +28,6 @@ else % Create the figure
     
     if ~exist( 'container' , 'var' )
         
-        clc
-        rng('default')
-        rng('shuffle')
-        
         % Create a figure
         figHandle = figure( ...
             'HandleVisibility', 'off',... % close all does not close the figure
@@ -70,23 +66,21 @@ else % Create the figure
     
     %% Panel proportions
     
-    panelProp.xposP = 0.05; % xposition of panel normalized : from 0 to 1
+    panelProp.xposP = 0.01; % xposition of panel normalized : from 0 to 1
     panelProp.wP    = 1 - panelProp.xposP * 2;
     
+    panelProp.interWidth = 0.01;
     panelProp.vect  = ...
-        [ 3 2 ]; % relative proportions of each panel, from bottom to top
-    
+        [2 1]; % relative proportions of each panel, from bottom to top
     panelProp.vectLength    = length(panelProp.vect);
     panelProp.vectTotal     = sum(panelProp.vect);
-    panelProp.adjustedTotal = panelProp.vectTotal + 1;
-    panelProp.unitWidth     = 1/panelProp.adjustedTotal;
-    panelProp.interWidth    = panelProp.unitWidth/panelProp.vectLength;
+    panelProp.unitWidth     = ( 1 - (panelProp.interWidth*(panelProp.vectLength + 1)) ) / panelProp.vectTotal ;
     
     panelProp.countP = panelProp.vectLength + 1;
-    panelProp.yposP  = @(countP) panelProp.unitWidth*sum(panelProp.vect(1:countP-1)) + 0.8*countP*panelProp.interWidth;
+    panelProp.yposP  = @(countP) panelProp.unitWidth*sum(panelProp.vect(1:countP-1)) + panelProp.interWidth *(countP);
     
     
-    %% Panel : Subject & Run
+    %% Panel : Open / Close
     
     p_oc.x = panelProp.xposP;
     p_oc.w = panelProp.wP;
@@ -95,7 +89,7 @@ else % Create the figure
     p_oc.y = panelProp.yposP(panelProp.countP);
     p_oc.h = panelProp.unitWidth*panelProp.vect(panelProp.countP);
     
-    handles.uipanel_OpenClose = uipanel(container,...
+    handles.uipanel_VB_OpenClose = uipanel(container,...
         'Title','Open / Close',...
         'Units', 'Normalized',...
         'Position',[p_oc.x p_oc.y p_oc.w p_oc.h],...
@@ -108,15 +102,15 @@ else % Create the figure
     b_close.w = 0.60;
     b_close.y = 0.1;
     b_close.h = 0.40;
-    b_close.tag = 'pushbutton_Close';
-    handles.(b_close.tag) = uicontrol(handles.uipanel_OpenClose,...
+    b_close.tag = 'pushbutton_VB_Close';
+    handles.(b_close.tag) = uicontrol(handles.uipanel_VB_OpenClose,...
         'Style','pushbutton',...
         'Units', 'Normalized',...
         'Position',[b_close.x b_close.y b_close.w b_close.h],...
         'String','Close',...
         'BackgroundColor',[1 0 0],...
         'TooltipString','',...
-        'Callback',@pushbutton_Close_Callback);
+        'Callback',@pushbutton_VB_Close_Callback);
     
     % ---------------------------------------------------------------------
     % Pushbutton : Open
@@ -125,33 +119,33 @@ else % Create the figure
     b_open.w = b_close.w;
     b_open.y = b_close.y + b_close.h;
     b_open.h = b_close.h;
-    b_open.tag = 'pushbutton_Open';
-    handles.(b_open.tag) = uicontrol(handles.uipanel_OpenClose,...
+    b_open.tag = 'pushbutton_VB_Open';
+    handles.(b_open.tag) = uicontrol(handles.uipanel_VB_OpenClose,...
         'Style','pushbutton',...
         'Units', 'Normalized',...
         'Position',[b_open.x b_open.y b_open.w b_open.h],...
         'String','Open',...
         'BackgroundColor',buttonBGcolor,...
         'TooltipString','',...
-        'Callback',@pushbutton_Open_Callback);
+        'Callback',@pushbutton_VB_Open_Callback);
     
     
-    %% Panel : Task
+    %% Panel : Valve Control
     
-    p_tk.x = panelProp.xposP;
-    p_tk.w = panelProp.wP;
+    p_valve.x = panelProp.xposP;
+    p_valve.w = panelProp.wP;
     
     panelProp.countP = panelProp.countP - 1;
-    p_tk.y = panelProp.yposP(panelProp.countP);
-    p_tk.h = panelProp.unitWidth*panelProp.vect(panelProp.countP);
+    p_valve.y = panelProp.yposP(panelProp.countP);
+    p_valve.h = panelProp.unitWidth*panelProp.vect(panelProp.countP);
     
     handles.uipanel_Valve = uibuttongroup(container,...
         'Title','Valve control',...
         'Units', 'Normalized',...
-        'Position',[p_tk.x p_tk.y p_tk.w p_tk.h],...
+        'Position',[p_valve.x p_valve.y p_valve.w p_valve.h],...
         'BackgroundColor',figureBGcolor);
     
-    p_tk = Object_Xpos_Xwidth_dispatcher([ 1 1 1 1 ],p_tk);
+    p_valve = Object_Xpos_Xwidth_dispatcher(p_valve, [ 1 1 1 1 ], 0.05 );
     
     button_y_OFF    = 0.05;
     button_h_OFF    = 0.30;
@@ -168,11 +162,11 @@ else % Create the figure
         % ---------------------------------------------------------------------
         % Pushbutton : OFF
         
-        p_tk.count     = p_tk.count + 1;
+        p_valve.count     = p_valve.count + 1;
         
-        b_OFF(channel).x   = p_tk.xpos(p_tk.count);
+        b_OFF(channel).x   = p_valve.xpos(p_valve.count);
         b_OFF(channel).y   = button_y_OFF;
-        b_OFF(channel).w   = p_tk.xwidth(p_tk.count);
+        b_OFF(channel).w   = p_valve.xwidth(p_valve.count);
         b_OFF(channel).h   = button_h_OFF;
         b_OFF(channel).tag = sprintf('pushbutton_OFF_%d',channel);
         handles.(b_OFF(channel).tag) = uicontrol(handles.uipanel_Valve,...
@@ -188,9 +182,9 @@ else % Create the figure
         % ---------------------------------------------------------------------
         % Pushbutton : ON
         
-        b_ON(channel).x   = p_tk.xpos(p_tk.count);
+        b_ON(channel).x   = p_valve.xpos(p_valve.count);
         b_ON(channel).y   = button_y_ON;
-        b_ON(channel).w   = p_tk.xwidth(p_tk.count);
+        b_ON(channel).w   = p_valve.xwidth(p_valve.count);
         b_ON(channel).h   = button_h_ON;
         b_ON(channel).tag = sprintf('pushbutton_ON_%d',channel);
         handles.(b_ON(channel).tag) = uicontrol(handles.uipanel_Valve,...
@@ -207,9 +201,9 @@ else % Create the figure
         % ---------------------------------------------------------------------
         % Edit : Valve aperture
         
-        e_VALVE(channel).x   = p_tk.xpos(p_tk.count);
+        e_VALVE(channel).x   = p_valve.xpos(p_valve.count);
         e_VALVE(channel).y   = button_y_VALVE;
-        e_VALVE(channel).w   = p_tk.xwidth(p_tk.count);
+        e_VALVE(channel).w   = p_valve.xwidth(p_valve.count);
         e_VALVE(channel).h   = button_h_VALVE;
         e_VALVE(channel).tag = sprintf('edit_VALVE_%d',channel);
         handles.(e_VALVE(channel).tag) = uicontrol(handles.uipanel_Valve,...
@@ -256,47 +250,58 @@ end % function
 %% GUI Functions
 
 % -------------------------------------------------------------------------
-function obj = Object_Xpos_Xwidth_dispatcher( vect , obj )
+function obj = Object_Xpos_Xwidth_dispatcher( obj , vect , interWidth )
 
 obj.vect  = vect; % relative proportions of each panel, from left to right
 
-obj.vectLength    = length(obj.vect);
-obj.vectTotal     = sum(obj.vect);
-obj.adjustedTotal = obj.vectTotal + 1;
-obj.unitWidth     = 1/obj.adjustedTotal;
-obj.interWidth    = obj.unitWidth/obj.vectLength;
+obj.interWidth = interWidth;
+obj.vectLength = length(obj.vect);
+obj.vectTotal  = sum(obj.vect);
+obj.unitWidth  = ( 1 - (obj.interWidth*(obj.vectLength + 1)) ) / obj.vectTotal ;
 
 obj.count  = 0;
-obj.xpos   = @(count) obj.unitWidth*sum(obj.vect(1:(count-1))) + 0.8*count*obj.interWidth;
+obj.xpos   = @(count) obj.unitWidth*sum(obj.vect(1:count-1)) + obj.interWidth *(count);
 obj.xwidth = @(count) obj.vect(count)*obj.unitWidth;
 
 end % function
 
 
 % -------------------------------------------------------------------------
-function pushbutton_Open_Callback(hObject, ~)
+function pushbutton_VB_Open_Callback(hObject, ~)
 handles = guidata(hObject); % load gui data
+
+if isfield(handles, 'FTDI')
+    warning('FTDI_VIBRA_IRM is already opened')
+    return
+end
 
 handles.FTDI = FTDI_VIBRA_IRM(); % create instance
 handles.FTDI.Open();
 handles.FTDI.Setup();
 
-set(handles.pushbutton_Open ,'BackgroundColor',[0 1 0]              );
-set(handles.pushbutton_Close,'BackgroundColor',handles.buttonBGcolor);
+set(handles.pushbutton_VB_Open ,'BackgroundColor',[0 1 0]              );
+set(handles.pushbutton_VB_Close,'BackgroundColor',handles.buttonBGcolor);
 
 guidata(hObject,handles); % store gui data
 end % function
 
 
 % -------------------------------------------------------------------------
-function pushbutton_Close_Callback(hObject, ~)
+function pushbutton_VB_Close_Callback(hObject, ~)
 handles = guidata(hObject); % load gui data
+
+if ~isfield(handles, 'FTDI')
+    warning('FTDI_VIBRA_IRM not opened')
+    return
+end
 
 handles.FTDI.StopAll();
 handles.FTDI.Close();
+handles.FTDI.delete();
+handles = rmfield(handles, 'FTDI');
 
-set(handles.pushbutton_Close ,'BackgroundColor',[1 0 0]              );
-set(handles.pushbutton_Open  ,'BackgroundColor',handles.buttonBGcolor);
+set(handles.pushbutton_VB_Close ,'BackgroundColor',[1 0 0]              );
+set(handles.pushbutton_VB_Open  ,'BackgroundColor',handles.buttonBGcolor);
 
 guidata(hObject,handles); % store gui data
 end % function
@@ -305,6 +310,11 @@ end % function
 % -------------------------------------------------------------------------
 function pushbutton_OFF_Callback(hObject, ~)
 handles = guidata(hObject); % load gui data
+
+if ~isfield(handles, 'FTDI')
+    warning('FTDI_VIBRA_IRM not opened')
+    return
+end
 
 tag = get(hObject,'tag');
 channel = str2double(tag(end));
@@ -320,6 +330,11 @@ end % function
 % -------------------------------------------------------------------------
 function pushbutton_ON_Callback(hObject, ~)
 handles = guidata(hObject); % load gui data
+
+if ~isfield(handles, 'FTDI')
+    warning('FTDI_VIBRA_IRM not opened')
+    return
+end
 
 tag = get(hObject,'tag');
 channel = str2double(tag(end));

@@ -55,20 +55,19 @@ else % Create the figure
     
     %% Panel proportions
     
-    panelProp.xposP = 0.05; % xposition of panel normalized : from 0 to 1
+    panelProp.xposP = 0.01; % xposition of panel normalized : from 0 to 1
     panelProp.wP    = 1 - panelProp.xposP * 2;
     
+    panelProp.interWidth = 0.01;
     panelProp.vect  = ...
         [0.75 2 3 1 0.75 1.5 ]; % relative proportions of each panel, from bottom to top
     
     panelProp.vectLength    = length(panelProp.vect);
     panelProp.vectTotal     = sum(panelProp.vect);
-    panelProp.adjustedTotal = panelProp.vectTotal + 1;
-    panelProp.unitWidth     = 1/panelProp.adjustedTotal;
-    panelProp.interWidth    = panelProp.unitWidth/panelProp.vectLength;
+    panelProp.unitWidth     = ( 1 - (panelProp.interWidth*(panelProp.vectLength + 1)) ) / panelProp.vectTotal ;
     
     panelProp.countP = panelProp.vectLength + 1;
-    panelProp.yposP  = @(countP) panelProp.unitWidth*sum(panelProp.vect(1:countP-1)) + 0.8*countP*panelProp.interWidth;
+    panelProp.yposP  = @(countP) panelProp.unitWidth*sum(panelProp.vect(1:countP-1)) + panelProp.interWidth *(countP);
     
     
     %% Panel : Subject & Run
@@ -604,15 +603,35 @@ else % Create the figure
         'Callback','Eyelink.ForceShutDown');
     
     
-    %% Panel : GUI_VIBRA_IRM
+    %% Panel : PulseParPort
     
     panelProp.countP = panelProp.countP - 1;
     
-    p_vibra.x = panelProp.xposP;
-    p_vibra.w = panelProp.wP / 2;
+    p_pulse.x = panelProp.xposP;
+    p_pulse.w = panelProp.wP / 2;
     
-    p_vibra.y = panelProp.yposP(panelProp.countP);
-    p_vibra.h = panelProp.unitWidth*panelProp.vect(panelProp.countP);
+    p_pulse.y = panelProp.yposP(panelProp.countP);
+    p_pulse.h = panelProp.unitWidth*panelProp.vect(panelProp.countP);
+    
+    handles.uipanel_PulseParPort = uibuttongroup(handles.(mfilename),...
+        'Title','PulseParPort',...
+        'Units', 'Normalized',...
+        'Position',[p_pulse.x p_pulse.y p_pulse.w p_pulse.h],...
+        'BackgroundColor',figureBGcolor);
+    
+    handle_PulseParPort = PulseParPort.GUI_PulseParPort( handles.uipanel_PulseParPort );
+    f = fieldnames(handle_PulseParPort);
+    for i = 1:length(f)
+        handles.(f{i}) = handle_PulseParPort.(f{i});
+    end
+    
+    %% Panel : GUI_VIBRA_IRM
+    
+    p_vibra.x = p_pulse.x + p_pulse.w;
+    p_vibra.w = p_pulse.w;
+    
+    p_vibra.y = p_pulse.y;
+    p_vibra.h = p_pulse.h;
     
     handles.uipanel_VIBRA_IRM = uibuttongroup(handles.(mfilename),...
         'Title','VIBRA_IRM',...
@@ -625,6 +644,7 @@ else % Create the figure
     for i = 1:length(f)
         handles.(f{i}) = handle_VIBRA_IRM.(f{i});
     end
+    
     
     %% Panel : Task
     
@@ -642,7 +662,7 @@ else % Create the figure
         'Position',[p_task.x p_task.y p_task.w p_task.h],...
         'BackgroundColor',figureBGcolor);
     
-    p_task = Object_Xpos_Xwidth_dispatcher( [1 1] , p_task );
+    p_task = Object_Xpos_Xwidth_dispatcher( p_task, [1 1] , 0.05 );
     
     % ---------------------------------------------------------------------
     % Pushbutton : ELEC
@@ -1012,18 +1032,17 @@ end % function
 
 
 % -------------------------------------------------------------------------
-function obj = Object_Xpos_Xwidth_dispatcher( vect , obj )
+function obj = Object_Xpos_Xwidth_dispatcher( obj , vect , interWidth )
 
 obj.vect  = vect; % relative proportions of each panel, from left to right
 
-obj.vectLength    = length(obj.vect);
-obj.vectTotal     = sum(obj.vect);
-obj.adjustedTotal = obj.vectTotal + 1;
-obj.unitWidth     = 1/obj.adjustedTotal;
-obj.interWidth    = obj.unitWidth/obj.vectLength;
+obj.interWidth = interWidth;
+obj.vectLength = length(obj.vect);
+obj.vectTotal  = sum(obj.vect);
+obj.unitWidth  = ( 1 - (obj.interWidth*(obj.vectLength + 1)) ) / obj.vectTotal ;
 
 obj.count  = 0;
-obj.xpos   = @(count) obj.unitWidth*sum(obj.vect(1:(count-1))) + 0.8*count*obj.interWidth;
+obj.xpos   = @(count) obj.unitWidth*sum(obj.vect(1:count-1)) + obj.interWidth *(count);
 obj.xwidth = @(count) obj.vect(count)*obj.unitWidth;
 
 end % function

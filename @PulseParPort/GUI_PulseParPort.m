@@ -433,9 +433,9 @@ if ~isempty(handles.PulseParPort.timer)
     return
 end
 
-msg        = str2double(get(handles.edit_SingleShot_Message   ,'String'));
-pulseWidth = str2double(get(handles.edit_SingleShot_PulseWidth,'String'));
-frequency  = str2double(get(handles.edit_Timer_Frequency      ,'String'));
+msg        = str2double(get(handles.edit_Timer_Message   ,'String'));
+pulseWidth = str2double(get(handles.edit_Timer_PulseWidth,'String'));
+frequency  = str2double(get(handles.edit_Timer_Frequency ,'String'));
 
 fprintf('Starting pulse cycle : msg=%d during %g seconds, with frequency=%g Hz \n', msg, pulseWidth, frequency)
 handles.PulseParPort.SetTimer( msg , pulseWidth, frequency );

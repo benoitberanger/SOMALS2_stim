@@ -54,7 +54,7 @@ Parameters.Video.ScreenBackgroundColor = [128 128 128]; % [R G B] ( from 0 to 25
 %%%%%%%%%%%%
 %   Text   %
 %%%%%%%%%%%%
-Parameters.Text.SizeRatio   = 0.10; % Size = ScreenWide *ratio
+Parameters.Text.SizeRatio   = 0.07; % Size = ScreenWide *ratio
 Parameters.Text.Font        = 'Arial';
 Parameters.Text.Color       = [255 255 255]; % [R G B] ( from 0 to 255 )
 Parameters.Text.ClickCorlor = [0   255 0  ]; % [R G B] ( from 0 to 255 )
@@ -79,7 +79,7 @@ Parameters.Yes     .Color      = Parameters.Text.Color;
 Parameters.Yes     .Xpos       = 0.25;
 Parameters.Yes     .Ypos       = 0.50;
 Parameters.Yes     .RectX      = 0.35;
-Parameters.Yes     .RectY      = 0.80;
+Parameters.Yes     .RectY      = 0.70;
 Parameters.Yes     .FrameColor = Parameters.Video.ScreenBackgroundColor/2;
 Parameters.Yes     .Thickness  = 0.005;
 Parameters.Yes     .FillColor  = Parameters.Video.ScreenBackgroundColor;

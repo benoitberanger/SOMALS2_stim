@@ -16,8 +16,11 @@ else
     else
         
         try
-            
-            OpenParPort(self.port);
+            if IsPC
+                OpenParPort();
+            elseif IsLinux
+                OpenParPort(self.port);
+            end
             self.status = true;
             fprintf('[%s:%s] : done \n', class(self), mfilename)
             

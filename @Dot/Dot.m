@@ -73,11 +73,11 @@ classdef Dot < baseObject
                     'frameColor = [R G B a] from 0 to 255' )
                 
                 % --- Xorigin ----
-                assert( isscalar(Xorigin) && isnumeric(Xorigin) && Xorigin>0 && Xorigin==round(Xorigin) , ...
+                assert( isscalar(Xorigin) && isnumeric(Xorigin) && Xorigin>0 , ...
                     'Xorigin = CenterX of the origin, in pixels' )
                 
                 % --- Yorigin ----
-                assert( isscalar(Yorigin) && isnumeric(Yorigin) && Yorigin>0 && Yorigin==round(Yorigin) , ...
+                assert( isscalar(Yorigin) && isnumeric(Yorigin) && Yorigin>0 , ...
                     'Yorigin = CenterX of the origin, in pixels' )
                 
                 % --- screenX ----

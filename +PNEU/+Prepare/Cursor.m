@@ -5,7 +5,7 @@ diameter   = S.Parameters.Cursor.DimensionRatio*S.PTB.wRect(4);
 diskColor  = S.Parameters.Cursor.DiskColor;
 frameColor = S.Parameters.Cursor.FrameColor;
 Xorigin    = S.PTB.CenterH;
-Yorigin    = S.Parameters.Cursor.Ypos * S.PTB.wRect(4);
+Yorigin    = round(S.Parameters.Cursor.Ypos * S.PTB.wRect(4));
 screenX    = S.PTB.wRect(3);
 screenY    = S.PTB.wRect(4);
 

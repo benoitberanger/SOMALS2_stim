@@ -228,6 +228,11 @@ switch get(get(handles.uipanel_StimOnOff,'SelectedObject'),'Tag')
                 % @FTDI_VIBRA_IRM
                 if isfield(handles, 'FTDI')
                     S.FTDI = handles.FTDI;
+                    v1 = str2double(get(handles.edit_VALVE_1,'String'));
+                    v2 = str2double(get(handles.edit_VALVE_2,'String'));
+                    v3 = str2double(get(handles.edit_VALVE_3,'String'));
+                    v4 = str2double(get(handles.edit_VALVE_4,'String'));
+                    S.FTDI.SetValue([v1 v2 v3 v4]); % update valve aperture
                 else
                     error('FTDI : Not Opened')
                 end

@@ -16,7 +16,7 @@ else
     else
         
         try
-            if IsPC
+            if IsWin
                 OpenParPort();
             elseif IsLinux
                 OpenParPort(self.port);

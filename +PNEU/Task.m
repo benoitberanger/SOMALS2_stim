@@ -121,7 +121,19 @@ try
                 when = StartTime + EP.Data{evt,2} - S.PTB.slack;
                 Screen('DrawingFinished', S.PTB.wPtr);
                 conditionFlipOnset = Screen('Flip', S.PTB.wPtr, when);
-                tic
+                
+                % Send stim
+                if strcmp(S.StimONOFF,'ON')
+                    switch EP.Data{evt,1}
+                        case 'Bone'
+                            S.FTDI.Start(1);
+                            fprintf('Started BONE   channel=1 stimulation \n')
+                        case 'Tendon'
+                            S.FTDI.Start(2);
+                            fprintf('Started TENDON channel=2 stimulation \n')
+                    end
+                end
+                
                 SR.AddSample([conditionFlipOnset-StartTime CURSOR.X CURSOR.Y])
                 % Common.SendParPortMessage(EP.Data{evt,1});
                 ER.AddEvent({EP.Data{evt,1} conditionFlipOnset-StartTime [] EP.Data{evt,4:end}});
@@ -291,6 +303,18 @@ try
                     end
                     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                     
+                end
+                
+                % Stop stim
+                if strcmp(S.StimONOFF,'ON')
+                    switch EP.Data{evt,1}
+                        case 'Bone'
+                            S.FTDI.Start(1);
+                            fprintf('Stopped BONE   channel=1 stimulation \n')
+                        case 'Tendon'
+                            S.FTDI.Start(2);
+                            fprintf('Stopped TENDON channel=2 stimulation \n')
+                    end
                 end
                 
             otherwise % ---------------------------------------------------

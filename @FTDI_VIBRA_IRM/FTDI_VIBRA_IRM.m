@@ -13,6 +13,8 @@ classdef FTDI_VIBRA_IRM < handle
         IsReady             = 0
         Value               = [60 60 60 60]; % [0-100] : percentage(%) of valve opened
         
+        dummy               = 0 % for non supported sytems
+        
     end % properties
     
     
@@ -26,13 +28,22 @@ classdef FTDI_VIBRA_IRM < handle
         
         function self = FTDI_VIBRA_IRM( DLL_path )
             
-            if nargin
-                assert( exist( DLL_path , 'file') == 2 , 'Not a valide file : %s', DLL_path)
-                self.FTD2XX_NET_dll_path = DLL_path;
+            if ispc
+                
+                if nargin
+                    assert( exist( DLL_path , 'file') == 2 , 'Not a valide file : %s', DLL_path)
+                    self.FTD2XX_NET_dll_path = DLL_path;
+                end
+                
+                % Place dll in directory of your choice.
+                NET.addAssembly(self.FTD2XX_NET_dll_path);
+                
+            elseif isunix
+                
+                self.dummy = 1;
+                warning('FTDI_VIBRA_IRM is in dummy mode')
+                
             end
-            
-            % Place dll in directory of your choice.
-            NET.addAssembly(self.FTD2XX_NET_dll_path);
             
         end % function : ctor
         

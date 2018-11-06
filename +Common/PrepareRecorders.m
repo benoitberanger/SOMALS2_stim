@@ -21,8 +21,12 @@ RR.AddStartTime( 'StartTime' , 0 );
 
 %% Sample recorder
 
-SR = SampleRecorder( { 'time (s)', 'X (pixels)', 'Y (pixels)'} , round(EP.Data{end,2}*S.PTB.FPS*1.20) ); % ( duration of the task +20% )
-
+switch S.Task
+    case 'PNEU'
+        SR = SampleRecorder( { 'time (s)', 'X (pixels)', 'Y (pixels)'} , round(EP.Data{end,2}*S.PTB.FPS*1.20) ); % ( duration of the task +20% )
+    case 'ELEC'
+        SR = SampleRecorder( { 'time (s)', 'channel 7 - Nerve' 'channel 8 - Skin'} , round(EP.Data{end,2}*S.PTB.FPS*1.20) ); % ( duration of the task +20% )
+end
 
 %% Prepare the logger of MRI triggers
 

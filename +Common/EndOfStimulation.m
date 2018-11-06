@@ -60,14 +60,14 @@ assignin('base','TaskData',TaskData)
 
 %% Close parallel port
 
-switch S.ParPort
-    
-    case 'On'
-        CloseParPort;
-        
-    case 'Off'
-        
-end
+% switch S.ParPort
+%     
+%     case 'On'
+%         CloseParPort;
+%         
+%     case 'Off'
+%         
+% end
 
 
 %% Diagnotic

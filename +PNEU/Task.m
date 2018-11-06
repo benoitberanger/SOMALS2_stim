@@ -16,6 +16,12 @@ try
     
     [ ER, RR, KL, SR ] = Common.PrepareRecorders( EP );
     
+    % This is a pointer copy, not a deep copy
+    S.EP = EP;
+    S.ER = ER;
+    S.RR = KL;
+    S.SR = SR;
+    
     
     %% Prepare objects
     

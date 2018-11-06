@@ -13,12 +13,16 @@ try
         
         case 'ELEC'
             names = {
-                ''
+                'Rest'
+                'Nerve'
+                'Skin'
                 };
             
         case 'PNEU'
             names = {
-                ''
+                'Rest'
+                'Bone'
+                'Tendon'
                 };
             
         case 'EyelinkCalibration'
@@ -40,18 +44,18 @@ try
         
         switch EventData{event,1}
             
-            case 'Repos'
+            case 'Rest'
                 onsets{1} = [onsets{1} ; EventData{event,2}];
                 
-            case 'Simple'
+            case 'Nerve'
                 onsets{2} = [onsets{2} ; EventData{event,2}];
-            case 'Complexe'
+            case 'Skin'
                 onsets{3} = [onsets{3} ; EventData{event,2}];
                 
-            case 'Direct'
-                onsets{1} = [onsets{1} ; EventData{event,2}];
-            case 'Deviation'
+            case 'Bone'
                 onsets{2} = [onsets{2} ; EventData{event,2}];
+            case 'Tendon'
+                onsets{3} = [onsets{3} ; EventData{event,2}];
                 
         end
         
@@ -65,18 +69,18 @@ try
         
         switch EventData{event,1}
             
-            case 'Repos'
+            case 'Rest'
                 durations{1} = [ durations{1} ; EventData{event+1,2}-EventData{event,2}] ;
                 
-            case 'Simple'
+            case 'Nerve'
                 durations{2} = [ durations{2} ; EventData{event+1,2}-EventData{event,2}] ;
-            case 'Complexe'
+            case 'Skin'
                 durations{3} = [ durations{3} ; EventData{event+1,2}-EventData{event,2}] ;
                 
-            case 'Direct'
-                durations{1} = [ durations{1} ; EventData{event+1,2}-EventData{event,2}] ;
-            case 'Deviation'
+            case 'Bone'
                 durations{2} = [ durations{2} ; EventData{event+1,2}-EventData{event,2}] ;
+            case 'Tendon'
+                durations{3} = [ durations{3} ; EventData{event+1,2}-EventData{event,2}] ;
                 
         end
         

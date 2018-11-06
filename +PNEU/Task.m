@@ -315,10 +315,10 @@ try
                 if strcmp(S.StimONOFF,'ON')
                     switch EP.Data{evt,1}
                         case 'Bone'
-                            S.FTDI.Start(1);
+                            S.FTDI.Stop(1);
                             fprintf('Stopped BONE   channel=1 stimulation \n')
                         case 'Tendon'
-                            S.FTDI.Start(2);
+                            S.FTDI.Stop(2);
                             fprintf('Stopped TENDON channel=2 stimulation \n')
                     end
                 end

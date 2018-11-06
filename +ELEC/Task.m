@@ -121,11 +121,11 @@ try
                     else
                         WaitSecs('UntilTime', StartTime + EP.Data{evt,2});
                     end
-                    t = WriteParPort(msg{1});
-                    SR.AddSample([t-StartTime msg{2}])
+                    WriteParPort(msg{1});
+                    SR.AddSample([GetSecs-StartTime msg{2}])
                     WaitSecs(Parameters.PulseDuration/1000);
-                    t = WriteParPort( 0    );
-                    SR.AddSample([t-StartTime [0 0]])
+                    WriteParPort( 0    );
+                    SR.AddSample([GetSecs-StartTime [0 0]])
                        
                     if counter == 1
                         ER.AddEvent({EP.Data{evt,1} lastStim-StartTime [] EP.Data{evt,4:end}});

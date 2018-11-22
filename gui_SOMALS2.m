@@ -709,7 +709,8 @@ else % Create the figure
     p_task.count = p_task.count + 1;
     
     p_stimonoff.x   = p_task.xpos(p_task.count);
-    p_stimonoff.w   = p_task.xwidth(p_task.count);
+    % p_stimonoff.w   = p_task.xwidth(p_task.count);
+    p_stimonoff.w   = 0.9;
     
     p_stimonoff.y = b_PNEU.y + b_PNEU.h + 0.10;
     p_stimonoff.h = 1 - p_stimonoff.y - 0.00;
@@ -767,72 +768,72 @@ else % Create the figure
         'BackgroundColor',figureBGcolor);
     
     
-    %% Panel : Cursor input method
-    
-    p_task.count  = p_task.count + 1;
-    
-    p_cursorinput.x   = p_task.xpos(p_task.count);
-    p_cursorinput.w   = p_task.xwidth(p_task.count);
-    
-    p_cursorinput.y = p_stimonoff.y;
-    p_cursorinput.h = p_stimonoff.h;
-    
-    handles.uipanel_CursorInput = uibuttongroup(handles.uipanel_Task,...
-        'Title','Cursor input method',...
-        'TitlePosition','righttop',...
-        'Units', 'Normalized',...
-        'Position',[p_cursorinput.x p_cursorinput.y p_cursorinput.w p_cursorinput.h],...
-        'BackgroundColor',figureBGcolor,...
-        'SelectionChangeFcn',@uipanel_CursorInput_SelectionChangeFcn);
-    
-    
-    p_cursorinput.nbO    = 2; % Number of objects
-    p_cursorinput.Ow     = 1/(p_cursorinput.nbO + 1); % Object width
-    p_cursorinput.countO = 0; % Object counter
-    p_cursorinput.xposO  = @(countO) p_cursorinput.Ow/(p_cursorinput.nbO+1)*countO + (countO-1)*p_cursorinput.Ow;
-    
-    
-    % ---------------------------------------------------------------------
-    % RadioButton : Joystick
-    
-    p_cursorinput.countO = p_cursorinput.countO + 1;
-    r_joystick.x   = p_cursorinput.xposO(p_cursorinput.countO);
-    r_joystick.y   = r_stimon.y;
-    r_joystick.w   = p_cursorinput.Ow;
-    r_joystick.h   = r_stimon.h;
-    r_joystick.tag = 'radiobutton_Joystick';
-    handles.(r_joystick.tag) = uicontrol(handles.uipanel_CursorInput,...
-        'Style','radiobutton',...
-        'Units', 'Normalized',...
-        'Position',[r_joystick.x r_joystick.y r_joystick.w r_joystick.h],...
-        'String','Joystick',...
-        'HorizontalAlignment','Center',...
-        'Tag',r_joystick.tag,...
-        'BackgroundColor',figureBGcolor,...
-        'ButtonDownFcn','joymex2_test',...
-        'Tooltip','Right click will open a test');
-    
-    
-    % ---------------------------------------------------------------------
-    % RadioButton : Mouse
-    
-    p_cursorinput.countO = p_cursorinput.countO + 1;
-    r_mouse.x   = p_cursorinput.xposO(p_cursorinput.countO);
-    r_mouse.y   = r_stimon.y ;
-    r_mouse.w   = p_cursorinput.Ow;
-    r_mouse.h   = r_stimon.h;
-    r_mouse.tag = 'radiobutton_Mouse';
-    handles.(r_mouse.tag) = uicontrol(handles.uipanel_CursorInput,...
-        'Style','radiobutton',...
-        'Units', 'Normalized',...
-        'Position',[r_mouse.x r_mouse.y r_mouse.w r_mouse.h],...
-        'String','Mouse',...
-        'HorizontalAlignment','Center',...
-        'Tag',r_mouse.tag,...
-        'BackgroundColor',figureBGcolor);
-    
-    % Uncheck the button : this is my way to force the user to select a method
-    set(handles.uipanel_CursorInput,'SelectedObject','')
+%     %% Panel : Cursor input method
+%     
+%     p_task.count  = p_task.count + 1;
+%     
+%     p_cursorinput.x   = p_task.xpos(p_task.count);
+%     p_cursorinput.w   = p_task.xwidth(p_task.count);
+%     
+%     p_cursorinput.y = p_stimonoff.y;
+%     p_cursorinput.h = p_stimonoff.h;
+%     
+%     handles.uipanel_CursorInput = uibuttongroup(handles.uipanel_Task,...
+%         'Title','Cursor input method',...
+%         'TitlePosition','righttop',...
+%         'Units', 'Normalized',...
+%         'Position',[p_cursorinput.x p_cursorinput.y p_cursorinput.w p_cursorinput.h],...
+%         'BackgroundColor',figureBGcolor,...
+%         'SelectionChangeFcn',@uipanel_CursorInput_SelectionChangeFcn);
+%     
+%     
+%     p_cursorinput.nbO    = 2; % Number of objects
+%     p_cursorinput.Ow     = 1/(p_cursorinput.nbO + 1); % Object width
+%     p_cursorinput.countO = 0; % Object counter
+%     p_cursorinput.xposO  = @(countO) p_cursorinput.Ow/(p_cursorinput.nbO+1)*countO + (countO-1)*p_cursorinput.Ow;
+%     
+%     
+%     % ---------------------------------------------------------------------
+%     % RadioButton : Joystick
+%     
+%     p_cursorinput.countO = p_cursorinput.countO + 1;
+%     r_joystick.x   = p_cursorinput.xposO(p_cursorinput.countO);
+%     r_joystick.y   = r_stimon.y;
+%     r_joystick.w   = p_cursorinput.Ow;
+%     r_joystick.h   = r_stimon.h;
+%     r_joystick.tag = 'radiobutton_Joystick';
+%     handles.(r_joystick.tag) = uicontrol(handles.uipanel_CursorInput,...
+%         'Style','radiobutton',...
+%         'Units', 'Normalized',...
+%         'Position',[r_joystick.x r_joystick.y r_joystick.w r_joystick.h],...
+%         'String','Joystick',...
+%         'HorizontalAlignment','Center',...
+%         'Tag',r_joystick.tag,...
+%         'BackgroundColor',figureBGcolor,...
+%         'ButtonDownFcn','joymex2_test',...
+%         'Tooltip','Right click will open a test');
+%     
+%     
+%     % ---------------------------------------------------------------------
+%     % RadioButton : Mouse
+%     
+%     p_cursorinput.countO = p_cursorinput.countO + 1;
+%     r_mouse.x   = p_cursorinput.xposO(p_cursorinput.countO);
+%     r_mouse.y   = r_stimon.y ;
+%     r_mouse.w   = p_cursorinput.Ow;
+%     r_mouse.h   = r_stimon.h;
+%     r_mouse.tag = 'radiobutton_Mouse';
+%     handles.(r_mouse.tag) = uicontrol(handles.uipanel_CursorInput,...
+%         'Style','radiobutton',...
+%         'Units', 'Normalized',...
+%         'Position',[r_mouse.x r_mouse.y r_mouse.w r_mouse.h],...
+%         'String','Mouse',...
+%         'HorizontalAlignment','Center',...
+%         'Tag',r_mouse.tag,...
+%         'BackgroundColor',figureBGcolor);
+%     
+%     % Uncheck the button : this is my way to force the user to select a method
+%     set(handles.uipanel_CursorInput,'SelectedObject','')
     
     
     %% Panel : Operation mode

@@ -1,4 +1,5 @@
-function [ ER, RR, KL, SR ] = PrepareRecorders( EP )
+% function [ ER, RR, KL, SR ] = PrepareRecorders( EP )
+function [ ER, RR, KL ] = PrepareRecorders( EP )
 global S
 
 %% Prepare event record
@@ -19,14 +20,14 @@ RR = EventRecorder( { 'event_name' , 'onset(s)' , 'duration(s)' , 'content' } , 
 RR.AddStartTime( 'StartTime' , 0 );
 
 
-%% Sample recorder
-
-switch S.Task
-    case 'PNEU'
-        SR = SampleRecorder( { 'time (s)', 'X (pixels)', 'Y (pixels)'} , round(EP.Data{end,2}*S.PTB.FPS*1.20) ); % ( duration of the task +20% )
-    case 'ELEC'
-        SR = SampleRecorder( { 'time (s)', 'channel 7 - Nerve' 'channel 8 - Skin'} , round(EP.Data{end,2}*S.PTB.FPS*1.20) ); % ( duration of the task +20% )
-end
+% %% Sample recorder
+% 
+% switch S.Task
+%     case 'PNEU'
+%         SR = SampleRecorder( { 'time (s)', 'X (pixels)', 'Y (pixels)'} , round(EP.Data{end,2}*S.PTB.FPS*1.20) ); % ( duration of the task +20% )
+%     case 'ELEC'
+%         SR = SampleRecorder( { 'time (s)', 'channel 7 - Nerve' 'channel 8 - Skin'} , round(EP.Data{end,2}*S.PTB.FPS*1.20) ); % ( duration of the task +20% )
+% end
 
 %% Prepare the logger of MRI triggers
 

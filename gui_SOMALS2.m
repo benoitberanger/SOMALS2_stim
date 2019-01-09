@@ -13,6 +13,8 @@ debug = 0;
 % Is the GUI already open ?
 figPtr = findall(0,'Tag',mfilename);
 
+cd(fileparts(which(mfilename))) % force go the directorie
+
 if ~isempty(figPtr) % Figure exists so brings it to the focus
     
     figure(figPtr);
@@ -51,6 +53,8 @@ else % Create the figure
     handles.figureBGcolor = figureBGcolor;
     handles.buttonBGcolor = buttonBGcolor;
     handles.editBGcolor   = editBGcolor  ;
+    
+    handles.path = fileparts(which(mfilename)); % force go the directory
     
     
     %% Panel proportions
@@ -681,7 +685,7 @@ else % Create the figure
         'String','ELEC',...
         'BackgroundColor',buttonBGcolor,...
         'Tag',b_ELEC.tag,...
-        'Callback',@main_SOMALS2);
+        'Callback',@pushbutton_ELEC_Callback);
     
     
     % ---------------------------------------------------------------------
@@ -700,7 +704,7 @@ else % Create the figure
         'String','PNEU',...
         'BackgroundColor',buttonBGcolor,...
         'Tag',b_PNEU.tag,...
-        'Callback',@main_SOMALS2);
+        'Callback',@pushbutton_PNEU_Callback);
     
     
     %% Panel : Stim ON / OFF
@@ -1085,4 +1089,20 @@ catch err
     rethrow(err)
 end
 
+end % function
+
+
+% -------------------------------------------------------------------------
+function pushbutton_ELEC_Callback(hObject, ~)
+handles = guidata(hObject);
+cd(handles.path);
+main_SOMALS2(hObject);
+end % function
+
+
+% -------------------------------------------------------------------------
+function pushbutton_PNEU_Callback(hObject, ~)
+handles = guidata(hObject);
+cd(handles.path);
+main_SOMALS2(hObject);
 end % function

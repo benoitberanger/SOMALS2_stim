@@ -42,20 +42,20 @@ switch get(hObject,'Tag')
     case 'pushbutton_PNEU'
         Task = 'PNEU';
         
-        % GUI : Task : input method ?
-        if isempty(get(handles.uipanel_CursorInput,'SelectedObject'))
-            error('Select a cursor input method')
-        end
-        switch get(get(handles.uipanel_CursorInput,'SelectedObject'),'Tag')
-            case 'radiobutton_Joystick'
-                InputMethod = 'Joystick';
-                joymex2('open',0);
-            case 'radiobutton_Mouse'
-                InputMethod = 'Mouse';
-            otherwise
-                warning('SOMALS2:InputMethod','Error in InputMethod')
-        end
-        S.InputMethod = InputMethod;
+        %         % GUI : Task : input method ?
+        %         if isempty(get(handles.uipanel_CursorInput,'SelectedObject'))
+        %             error('Select a cursor input method')
+        %         end
+        %         switch get(get(handles.uipanel_CursorInput,'SelectedObject'),'Tag')
+        %             case 'radiobutton_Joystick'
+        %                 InputMethod = 'Joystick';
+        %                 joymex2('open',0);
+        %             case 'radiobutton_Mouse'
+        %                 InputMethod = 'Mouse';
+        %             otherwise
+        %                 warning('SOMALS2:InputMethod','Error in InputMethod')
+        %         end
+        %         S.InputMethod = InputMethod;
         
     case 'pushbutton_EyelinkCalibration'
         Task = 'EyelinkCalibration';

@@ -1,6 +1,8 @@
 function [ TaskData ] = Task
 global S
 
+S.PTB.slack = 0.001;
+
 try
     %% Tunning of the task
     
@@ -14,18 +16,19 @@ try
     
     %% Prepare event record and keybinf logger
     
-    [ ER, RR, KL, SR ] = Common.PrepareRecorders( EP );
+    % [ ER, RR, KL, SR ] = Common.PrepareRecorders( EP );
+    [ ER, RR, KL ] = Common.PrepareRecorders( EP );
     
     % This is a pointer copy, not a deep copy
     S.EP = EP;
     S.ER = ER;
     S.RR = KL;
-    S.SR = SR;
+    % S.SR = SR;
     
     
     %% Prepare objects
     
-    [ CROSS ] = PNEU.Prepare.Cross;
+    % [ CROSS ] = PNEU.Prepare.Cross;
     
     
     %% Eyelink
@@ -47,9 +50,9 @@ try
             
             case 'StartTime' % --------------------------------------------
                 
-                CROSS.Draw
-                Screen('DrawingFinished',S.PTB.wPtr);
-                Screen('Flip',S.PTB.wPtr);
+                % CROSS.Draw
+                % Screen('DrawingFinished',S.PTB.wPtr);
+                % Screen('Flip',S.PTB.wPtr);
                 
                 StartTime = Common.StartTimeEvent;
                 
@@ -62,7 +65,7 @@ try
                 
                 lastFlipOnset = WaitSecs('UntilTime', StartTime + EP.Data{evt,2});
                 
-                SR.AddSample([lastFlipOnset-StartTime 0 0])
+                % SR.AddSample([lastFlipOnset-StartTime 0 0])
                 ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] EP.Data{evt,4:end}});
                 RR.AddEvent({[EP.Data{evt,1} '_CROSS'] lastFlipOnset-StartTime [] []});
                 
@@ -71,7 +74,7 @@ try
                 secs = lastFlipOnset;
                 while secs < when
                     
-                    SR.AddSample([secs-StartTime 0 0])
+                    % SR.AddSample([secs-StartTime 0 0])
                     
                     % Fetch keys
                     [keyIsDown, secs, keyCode] = KbCheck;
@@ -94,17 +97,15 @@ try
             case {'Nerve', 'Skin'} % --------------------------------------
                 
                 % Send stim
-                if strcmp(S.StimONOFF,'ON')
-                    switch EP.Data{evt,1}
-                        case 'Nerve'
-                            msg = {2^6 ; [1 0]};
-                            fprintf('Started NERVE channel=7 stimulation \n')
-                        case 'Skin'
-                            msg = {2^7 ; [0 1]};
-                            fprintf('Started SKIN  channel=8 stimulation \n')
-                        otherwise
-                                error('cond ?')
-                    end
+                switch EP.Data{evt,1}
+                    case 'Nerve'
+                        msg = {2^6 ; [1 0]};
+                        fprintf('Started NERVE channel=7 stimulation \n')
+                    case 'Skin'
+                        msg = {2^7 ; [0 1]};
+                        fprintf('Started SKIN  channel=8 stimulation \n')
+                    otherwise
+                        error('cond ?')
                 end
                 
                 when = StartTime + EP.Data{evt+1,2} - S.PTB.slack;
@@ -121,11 +122,12 @@ try
                     else
                         WaitSecs('UntilTime', StartTime + EP.Data{evt,2});
                     end
-                    WriteParPort(msg{1});
-                    SR.AddSample([GetSecs-StartTime msg{2}])
-                    WaitSecs(Parameters.PulseDuration/1000);
-                    WriteParPort( 0    );
-                    SR.AddSample([GetSecs-StartTime [0 0]])
+                    Common.SendParPortMessage(msg{1}, Parameters.PulseDuration/1000)
+                    % WriteParPort(msg{1});
+                    % SR.AddSample([GetSecs-StartTime msg{2}])
+                    % WaitSecs();
+                    % WriteParPort( 0    );
+                    % SR.AddSample([GetSecs-StartTime [0 0]])
                        
                     if counter == 1
                         ER.AddEvent({EP.Data{evt,1} lastStim-StartTime [] EP.Data{evt,4:end}});
@@ -183,7 +185,8 @@ try
     % Close the audio device
     % PsychPortAudio('Close');
     
-    TaskData = Common.EndOfStimulation( TaskData, EP, ER, RR, KL, SR, StartTime, StopTime );
+    % TaskData = Common.EndOfStimulation( TaskData, EP, ER, RR, KL, SR, StartTime, StopTime );
+    TaskData = Common.EndOfStimulation( TaskData, EP, ER, RR, KL, StartTime, StopTime );
     
     % TaskData.BR = BR;
     % assignin('base','BR', BR)

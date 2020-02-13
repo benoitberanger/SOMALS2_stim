@@ -2,6 +2,9 @@ function main_SOMALS2(hObject, ~)
 % SOMALS2_main is the main program, calling the different tasks and
 % routines, accoding to the paramterts defined in the GUI
 
+% Add API_VibraIRM in the path
+addpath( fullfile( fileparts(fileparts(mfilename('fullpath'))) , 'API_VibraIRM') )
+
 
 %% GUI : open a new one or retrive data from the current one
 
